@@ -1,0 +1,75 @@
+.caption-style-1{
+	list-style-type: none;
+	margin: 0px;
+	padding: 0px;
+}
+.caption-style-1 .item{
+	float: left;
+	padding: 0px;
+	position: relative;
+	overflow: hidden;
+}
+.caption-style-1 .item:hover .caption{
+	opacity: 1;
+}
+.caption-style-1 img{
+	margin: 0px;
+	padding: 0px;
+	float: left;
+	z-index: 4;
+}
+.caption-style-1 .caption{
+	cursor: pointer;
+	position: absolute;
+	top: 0px;
+	left: -15px;
+	opacity: 0;
+	-webkit-transition:all 0.45s ease-in-out;
+	-moz-transition:all 0.45s ease-in-out;
+	-o-transition:all 0.45s ease-in-out;
+	-ms-transition:all 0.45s ease-in-out;
+	transition:all 0.45s ease-in-out;
+    -webkit-transition-delay: 0.4s;
+}
+.caption-style-1 .blur{
+	background-color: rgba(0,0,0,0.65);
+	height: 300px;
+	width: 390px;
+	z-index: 5;
+	position: absolute;
+	left: -10px;
+    margin-top: -10px;
+}
+.caption-style-1 .caption-text h1{
+	text-transform: uppercase;
+	font-size: 24px;
+}
+.caption-style-1 .caption-text{
+	z-index: 10;
+	color: #fff;
+	position: absolute;
+	width: 390px;
+	height: 300px;
+	text-align: center;
+	top:100px;
+}
+.img-label{
+	position: absolute;
+	top: 60%;
+	left: -10px;
+	padding-left: 40px;
+	z-index: 9999;
+	background-image: url(../img/label-bg.png);
+	color: #FFF;
+	height: 60px;
+	line-height: 60px;
+	width: 80%;
+	font-size: 20px;
+	font-family: "Roboto-Light";
+	transition: all 0.5s cubic-bezier(0.39, 0.575, 0.565, 1);
+	text-transform: uppercase;
+    -webkit-transition-delay: 0.4s;
+}
+.car-item:hover .img-label{
+	left: -100%;
+}

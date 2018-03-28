@@ -1,0 +1,54 @@
+@font-face {
+  font-family: '10588';
+  src: url('../fonts/10588.eot');
+  src: url('../fonts/10588.woff2') format('woff2'),
+       url('../fonts/10588.eot?#iefix') format('embedded-opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'AstakhovDishedGlamour';
+  src: url('../fonts/AstakhovDishedGlamour.woff') format('woff'),
+       url('../fonts/AstakhovDishedGlamour.ttf') format('truetype'),
+       url('../fonts/AstakhovDishedGlamour.svg#AstakhovDishedGlamour') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: '10403';
+  src: url('../fonts/10403.eot');
+  src: url('../fonts/10403.woff2') format('woff2'),
+       url('../fonts/10403.eot?#iefix') format('embedded-opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'AstakhovFirstSimple';
+  src: url('../fonts/AstakhovFirstSimple.woff') format('woff'),
+       url('../fonts/AstakhovFirstSimple.ttf') format('truetype'),
+       url('../fonts/AstakhovFirstSimple.svg#AstakhovFirstSimple') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: '10662';
+  src: url('../fonts/10662.eot');
+  src: url('../fonts/10662.woff2') format('woff2'),
+       url('../fonts/10662.eot?#iefix') format('embedded-opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'AstakhovDishedSerif11.006';
+  src: url('../fonts/AstakhovDishedSerif11.006.woff') format('woff'),
+       url('../fonts/AstakhovDishedSerif11.006.ttf') format('truetype'),
+       url('../fonts/AstakhovDishedSerif11.006.svg#AstakhovDishedSerif11.006') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
