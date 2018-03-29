@@ -7,7 +7,7 @@
 
 @include('admin.list-elements', [
     'actions' => [
-        trans('variables.elements_list') => urlForFunctionLanguage($lang, ''),
+        trans('variables.elements_list') => route('languages.create'),
     ]
 ])
 

@@ -7,8 +7,8 @@
 
     @include('admin.list-elements', [
         'actions' => [
-            trans('variables.elements_list') => urlForFunctionLanguage($lang, ''),
-            trans('variables.add_element') => urlForFunctionLanguage($lang, 'item/create'),
+            trans('variables.elements_list') => route('modules.index'),
+            trans('variables.add_element') => route('submodules.index'),
         ]
     ])
 

@@ -17,7 +17,6 @@ Route::group(['prefix' => 'back', 'middleware' => 'auth'], function () {
 
     Route::get('/users', 'Admin\AdminUserController@index');
 
-
     Route::resource('/pages', 'Admin\PagesController');
     Route::patch('/pages/{id}/change-status', 'Admin\PagesController@status')->name('pages.change.status');
 
@@ -48,10 +47,22 @@ Route::group(['prefix' => 'back', 'middleware' => 'auth'], function () {
 
         Route::get('/reviews', 'Admin\PostsRatingController@index')->name('reviews.index');
         Route::patch('/reviews', 'Admin\PostsRatingController@update')->name('reviews.update');
+    });
+});
 
+var_dump(session('applocale'));
+$prefix = session('applocale') == 'ro' ? '' : '{lang}';
 
+var_dump($prefix);
+
+Route::group(['prefix' => $prefix], function() {
+
+    Route::get('/posts', function() {
+        $posts = App\Models\Post::with('translation')->get();
+
+        return view('front.posts', compact('posts'));
     });
 
-
 });
+
 

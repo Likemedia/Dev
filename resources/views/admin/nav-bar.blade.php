@@ -19,7 +19,6 @@
             {{ $lang->lang }}
         </a>
     @endforeach
-
 </div>
 
 <div class="header-block header-block-nav">
