@@ -47,6 +47,9 @@ Route::group(['prefix' => 'back', 'middleware' => 'auth'], function () {
 
         Route::get('/reviews', 'Admin\PostsRatingController@index')->name('reviews.index');
         Route::patch('/reviews', 'Admin\PostsRatingController@update')->name('reviews.update');
+
+        Route::get('/meta', 'Admin\MetasController@index')->name('metas.index');
+        Route::patch('/meta', 'Admin\MetasController@update')->name('metas.update');
     });
 });
 

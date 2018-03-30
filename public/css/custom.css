@@ -413,6 +413,15 @@ span.error {
     overflow: hidden;
 }
 
+.full-part, .right-part, .left-part {
+    padding-bottom: 25px !important;
+    padding-top: 25px !important;
+}
+
+article.content {
+    margin-top: 15px !important;
+}
+
 .list-content .part{
     background-color: #FFF;
     box-sizing: border-box;
@@ -526,7 +535,7 @@ span.error {
     border-color: #85CE36;
     outline: none;
     display: block;
-    margin: 20px auto;
+    margin: 0 auto;
 }
 
 .list-content form.form-reg input[type="submit"]:hover{

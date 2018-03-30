@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Meta;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -14,50 +15,9 @@ class MetasController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $metas = Meta::first();
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return view('admin.metas.index', compact('metas'));
     }
 
     /**
@@ -67,19 +27,23 @@ class MetasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
-    }
+        $meta = Meta::first() ?? new Meta();
+        $meta->save();
+        $meta->translations()->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        foreach ($this->langs as $lang):
+            $meta->translations()->create([
+                'lang_id' => $lang->id,
+                'title' => request('title_' . $lang->lang),
+                'keywords' => request('keywords_' . $lang->lang),
+                'description' => request('description_' . $lang->lang),
+            ]);
+        endforeach;
+
+        session()->flash('message', 'New item has been created!');
+
+        return redirect()->route('metas.index');
     }
 }
