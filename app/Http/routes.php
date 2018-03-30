@@ -32,8 +32,15 @@ Route::group(['prefix' => 'back', 'middleware' => 'auth'], function () {
     Route::post('/categories/change', 'Admin\CategoriesController@change')->name('categories.change');
     Route::post('/categories/part', 'Admin\CategoriesController@partialSave')->name('categories.partial.save');
     Route::post('/categories/move/posts_', 'Admin\CategoriesController@movePosts_')->name('categories.move.posts_');
-
     Route::post('/categories/part', 'Admin\CategoriesController@partialSave')->name('categories.partial.save');
+
+    Route::resource('/menus', 'Admin\MenusController');
+    Route::post('/menus/move/posts', 'Admin\MenusController@movePosts')->name('menus.move.posts');
+    Route::post('/menus/change', 'Admin\MenusController@change')->name('menus.change');
+    Route::post('/menus/part', 'Admin\MenusController@partialSave')->name('menus.partial.save');
+    Route::post('/menus/move/posts_', 'Admin\MenusController@movePosts_')->name('menus.move.posts_');
+    Route::post('/menus/part', 'Admin\MenusController@partialSave')->name('menus.partial.save');
+    Route::post('/menus/categories/assignment', 'Admin\MenusController@assignmentCategory')->name('menus.assignment.category');
 
     Route::resource('/tags', 'Admin\TagsController');
 
@@ -50,10 +57,8 @@ Route::group(['prefix' => 'back', 'middleware' => 'auth'], function () {
     });
 });
 
-var_dump(session('applocale'));
-$prefix = session('applocale') == 'ro' ? '' : '{lang}';
 
-var_dump($prefix);
+$prefix = session('applocale') == 'ro' ? '' : '{lang}';
 
 Route::group(['prefix' => $prefix], function() {
 
@@ -64,5 +69,3 @@ Route::group(['prefix' => $prefix], function() {
     });
 
 });
-
-

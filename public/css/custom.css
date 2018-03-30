@@ -1325,3 +1325,8 @@ a.black:hover{
 .parent-tag li{
     margin: 10px 0;
 }
+input[type='radio']{
+    display: inline-block;
+    width: 30px !important;
+    height: auto !important;
+}
