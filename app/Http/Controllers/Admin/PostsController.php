@@ -72,6 +72,7 @@ class PostsController extends Controller
                 'body' => request('body_' . $lang->lang),
                 'slug' => request('slug_' . $lang->lang),
                 'url' => request('url_' . $lang->lang),
+                'meta_h1' => request('meta_h1_' . $lang->lang),
                 'meta_title' => request('meta_title_' . $lang->lang),
                 'meta_keywords' => request('meta_keywords_' . $lang->lang),
                 'meta_description' => request('meta_description_' . $lang->lang),

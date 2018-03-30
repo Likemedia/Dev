@@ -1,5 +1,7 @@
+@extends('front.layouts.app')
 
 
+@section('content')
 <div  class="header-block">
     @foreach($langs as $lang)
         <a href="{{ route('set.language', $lang->lang) }}"
@@ -18,3 +20,4 @@
     </article>
 @endforeach
 
+@endsection

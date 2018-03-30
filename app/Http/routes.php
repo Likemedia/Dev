@@ -50,12 +50,8 @@ Route::group(['prefix' => 'back', 'middleware' => 'auth'], function () {
     });
 });
 
-var_dump(session('applocale'));
-$prefix = session('applocale') == 'ro' ? '' : '{lang}';
 
-var_dump($prefix);
 
-Route::group(['prefix' => $prefix], function() {
 
     Route::get('/posts', function() {
         $posts = App\Models\Post::with('translation')->get();
@@ -63,6 +59,5 @@ Route::group(['prefix' => $prefix], function() {
         return view('front.posts', compact('posts'));
     });
 
-});
 
 

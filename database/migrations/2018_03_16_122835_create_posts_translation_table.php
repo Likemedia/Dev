@@ -23,6 +23,7 @@ class CreatePostsTranslationTable extends Migration
             $table->text('body');
             $table->string('slug');
             $table->string('url');
+            $table->string('meta_h1');
             $table->string('meta_title');
             $table->string('meta_keywords');
             $table->text('meta_description');
