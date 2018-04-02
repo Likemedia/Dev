@@ -288,7 +288,7 @@ function SelectGoodsCatsTree($lang_id, $id, $curr_id = null, $level = 0)
 
                <form method="post" action=" ' . $delete . '">
                  ' . csrf_field() . method_field("DELETE") . '
-               <button type="submit" class="btn-link"><a href=""><i class="fa fa-trash" aria-hidden="true"></i></a></button>
+               <button type="submit" class="btn-link"><a class="modal-id" data-toggle="modal" data-target="' . $addNew . '_delete" data-id="' . $entry->category_id . '" data-name="' . $entry->name . '" href=""><i class="fa fa-trash" aria-hidden="true"></i></a></button>
                </form>
 
            </div>',

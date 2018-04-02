@@ -64,22 +64,11 @@ Route::group(['prefix' => 'back', 'middleware' => 'auth'], function () {
 $prefix = session('applocale');
 $lang = App\Models\Lang::where('default', 1)->first();
 
-
-echo $prefix;
-echo "<br>";
-
 if ($prefix == $lang->lang) {
-    echo "default";
     require_once(__DIR__.'/routesFront.php');
 }else{
-    echo "also";
     Route::group(['prefix' => $prefix], function() {
         require_once(__DIR__.'/routesFront.php');
     });
 
 }
-
-
-
-
-

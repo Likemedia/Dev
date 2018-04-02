@@ -120,8 +120,31 @@ class CategoriesController extends Controller
         dd($id);
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
+        if($id == 0){
+            $id = $request->parent_id;
+            $posts = Post::where('category_id', $id)->get();
+
+            $addToId = $request->add;
+            if (!empty($posts)) {
+                if ($addToId != 0) {
+                    if (!empty($posts)) {
+                        foreach ($posts as $key => $post) {
+                            Post::where('id', $post->id)->update([
+                                'category_id' => $addToId,
+                            ]);
+                        }
+                    }
+                }else{
+                    foreach ($posts as $key => $post) {
+                        Post::where('id', $post->id)->delete();
+                    }
+                }
+            }
+        }
+
+
         $category = Category::findOrFail($id);
 
         $categories = Category::all();
