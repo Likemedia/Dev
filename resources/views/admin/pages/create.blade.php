@@ -27,7 +27,7 @@
                 </li>
                 <li>
                     <label for="">Active</label>
-                    <div style="display: flex; align-items: center; float: left;">
+                    <div>
                         <input type="radio" name="active" value="1">Yes
                         <input type="radio" name="active" value="0">No
                     </div>

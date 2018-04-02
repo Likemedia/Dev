@@ -31,4 +31,9 @@ class Controller extends BaseController
         }
     }
 
+    public function test1($ok)
+    {
+        dd($ok);
+    }
+
 }

@@ -15,7 +15,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        session(['applocale' => Lang::where('default', 1)->first()->name]);
+        // TEMP:
+        session(['applocale' => Lang::where('default', 1)->first()->lang]);
+
+        $currentLang = Lang::where('lang', \Request::segment(1))->first()->lang ?? session('applocale');
+
+        session(['applocale' => $currentLang]);
+        // ENDTEMP
 
         \View::share('langs', Lang::all());
 

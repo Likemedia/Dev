@@ -20,4 +20,9 @@ class Category extends Model
 
         return $this->hasMany(CategoryTranslation::class)->where('lang_id', $lang);
     }
+
+    public function translationByLanguage($lang)
+    {
+        return $this->hasMany(CategoryTranslation::class)->where('lang_id', $lang);
+    }
 }

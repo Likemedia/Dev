@@ -302,6 +302,84 @@ function SelectGoodsCatsTree($lang_id, $id, $curr_id = null, $level = 0)
     return implode($result);
 }
 
+
+/**
+ * @param $lang_id
+ * @param $id
+ * @param null $curr_id
+ * @return string
+ */
+function SelectMenusTree($lang_id, $id, $curr_id = null, $level = 0)
+{
+
+    $menu_id_by_level = DB::table('menus')
+        ->where('parent_id', $id)
+        ->orderBy('position', 'asc')
+        ->get();
+
+
+    $menu_by_level = [];
+    foreach ($menu_id_by_level as $key => $one_menu_id_by_level) {
+        $menu_by_level[$key] = DB::table('menus_translation')
+            ->join('menus', 'menus_translation.menu_id', '=', 'menus.id')
+            ->where('menu_id', $one_menu_id_by_level->id)
+            ->where('lang_id', $lang_id)
+            ->first();
+    }
+
+    $result = array();
+
+    $menu_by_level = array_filter($menu_by_level);
+    $level++;
+
+    if (sizeof($menu_by_level) > 0) {
+        $result[] = '<ol class="dd-list">';
+        foreach ($menu_by_level as $entry) {
+
+            $edit = route('menus.edit', $entry->menu_id);
+            $delete = route('menus.destroy', $entry->menu_id);
+
+            if ((!checkPosts($entry->id)) && ($level != 4)) {
+                $addNew = '#addCategory';
+            } else {
+                $addNew = '#warning';
+            }
+
+            $result[] = sprintf(
+                '<li class="dd-item dd3-item" data-id="' . $entry->menu_id . '">
+                %s
+                <div class="dd-handle dd3-handle">
+                <i class="fa fa-bars"></i>
+                </div><div class="dd3-content">
+                </div>
+                %s
+            </li>',
+                '<span>' . $entry->name .' - ' . $entry->url. '</span><div class="buttons">
+
+               <a href="' . $edit . '"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+
+               <a href=""><i class="fa fa-eye" aria-hidden="true"></i></a>
+
+               <a class="btn-link modal-id" data-toggle="modal" data-target="' . $addNew . '" data-id="' . $entry->menu_id . '" data-name="' . $entry->name . '">
+               <i class="fa fa-plus" aria-hidden="true"></i>
+               </a>
+
+               <form method="post" action=" ' . $delete . '">
+                 ' . csrf_field() . method_field("DELETE") . '
+               <button type="submit" class="btn-link"><a href=""><i class="fa fa-trash" aria-hidden="true"></i></a></button>
+               </form>
+
+           </div>',
+
+                SelectMenusTree($lang_id, $entry->menu_id, 0, $level)
+            );
+        }
+        $result[] = '</ol>';
+    }
+
+    return implode($result);
+}
+
 /**
  * @param $lang_id
  * @param $id

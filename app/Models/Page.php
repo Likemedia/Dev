@@ -21,4 +21,9 @@ class Page extends Model
 
         return $this->hasMany(PageTranslation::class)->where('lang_id', $lang);
     }
+
+    public function translationByLanguage($lang)
+    {
+        return $this->hasMany(PageTranslation::class)->where('lang_id', $lang);
+    }
 }
