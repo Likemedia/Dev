@@ -100,6 +100,12 @@
 
 
                                 <li>
+                                    <label>{{trans('variables.h1_title_page')}}</label>
+                                    <input type="text" name="meta_h1_{{ $lang->lang }}">
+                                </li>
+
+
+                                <li>
                                     <label>{{trans('variables.meta_title_page')}}</label>
                                     <input type="text" name="meta_title_{{ $lang->lang }}">
                                 </li>

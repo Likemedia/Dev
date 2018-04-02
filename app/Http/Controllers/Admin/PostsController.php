@@ -72,6 +72,7 @@ class PostsController extends Controller
                 'body' => request('body_' . $lang->lang),
                 'slug' => request('slug_' . $lang->lang),
                 'url' => request('url_' . $lang->lang),
+                'meta_h1' => request('meta_h1_' . $lang->lang),
                 'meta_title' => request('meta_title_' . $lang->lang),
                 'meta_keywords' => request('meta_keywords_' . $lang->lang),
                 'meta_description' => request('meta_description_' . $lang->lang),
@@ -147,7 +148,69 @@ class PostsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        
+
+        $post = Post::findOrFail($id);
+        $post->category_id = $request->category_id;
+        
+        if ($request->image != null) {
+            if (file_exists('images/posts/' . $post->image)) {
+                unlink('images/posts/' . $post->image);
+            }
+
+            $name = time() . '-' . $request->image->getClientOriginalName();
+            $request->image->move('images/posts', $name);
+
+            $post->image = $name;
+        }
+
+        $post->save();
+
+        $post->translations()->delete();
+
+
+        foreach ($this->langs as $lang):
+            $post->translations()->create([
+                'lang_id' => $lang->id,
+                'title' => request('title_' . $lang->lang),
+                'body' => request('body_' . $lang->lang),
+                'slug' => request('slug_' . $lang->lang),
+                'url' => request('url_' . $lang->lang),
+                'meta_h1' => request('meta_h1_' . $lang->lang),
+                'meta_title' => request('meta_title_' . $lang->lang),
+                'meta_keywords' => request('meta_keywords_' . $lang->lang),
+                'meta_description' => request('meta_description_' . $lang->lang),
+            ]);
+
+            if ( (request('tag_' . $lang->lang) != null) && !(request('tag_' . $lang->lang)[0] == "") ) {
+                $tags = request('tag_' . $lang->lang);
+                foreach ($tags as $newTag):
+                    $tag = new Tag();
+                    $tag->lang_id = $lang->id;
+                    $tag->post_id = $post->id;
+                    $tag->name = $newTag;
+                    $tag->save();
+                endforeach;
+            }
+
+            if ( request('tags_' . $lang->lang) != null ) {
+                $tags1 = request('tags_' . $lang->lang);
+                foreach ($tags1 as $newTag):
+                    $tag = new Tag();
+                    $tag->lang_id = $lang->id;
+                    $tag->post_id = $post->id;
+                    $tag->name = $newTag;
+                    $tag->save();
+                endforeach;
+            }
+
+        endforeach;
+
+
+        session()->flash('message', 'Item has been edited!');
+
+        return redirect()->route('posts.index');
+
     }
 
     /**

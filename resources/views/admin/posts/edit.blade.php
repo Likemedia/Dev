@@ -18,8 +18,8 @@
 
     <div class="list-content">
 
-        <form class="form-reg" method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data">
-            {{ csrf_field() }}
+        <form class="form-reg" method="POST" action="{{ route('posts.update', $post->id) }}" enctype="multipart/form-data">
+            {{ csrf_field() }} {{ method_field('PATCH') }}
 
             <div class="part full-part" style="padding: 25px 8px;">
 
@@ -120,6 +120,18 @@
                                             @endforeach
                                     >
 
+                                </li>
+
+
+                                <li>
+                                    <label>{{trans('variables.h1_title_page')}}</label>
+                                    <input type="text" name="meta_title_{{ $lang->lang }}"
+                                           @foreach($post->translations as $translation)
+                                           @if ($translation->lang_id == $lang->id)
+                                           value="{{ $translation->meta_h1 }}"
+                                            @endif
+                                            @endforeach
+                                    >
                                 </li>
 
 

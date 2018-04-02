@@ -54,11 +54,16 @@ Route::group(['prefix' => 'back', 'middleware' => 'auth'], function () {
 
         Route::get('/reviews', 'Admin\PostsRatingController@index')->name('reviews.index');
         Route::patch('/reviews', 'Admin\PostsRatingController@update')->name('reviews.update');
+
+        Route::get('/meta', 'Admin\MetasController@index')->name('metas.index');
+        Route::patch('/meta', 'Admin\MetasController@update')->name('metas.update');
     });
 });
 
+
 $prefix = session('applocale');
 $lang = App\Models\Lang::where('default', 1)->first();
+
 
 echo $prefix;
 echo "<br>";
@@ -71,4 +76,10 @@ if ($prefix == $lang->lang) {
     Route::group(['prefix' => $prefix], function() {
         require_once(__DIR__.'/routesFront.php');
     });
+
 }
+
+
+
+
+
