@@ -57,15 +57,18 @@ Route::group(['prefix' => 'back', 'middleware' => 'auth'], function () {
     });
 });
 
+$prefix = session('applocale');
+$lang = App\Models\Lang::where('default', 1)->first();
 
-$prefix = session('applocale') == 'ro' ? '' : '{lang}';
+echo $prefix;
+echo "<br>";
 
-Route::group(['prefix' => $prefix], function() {
-
-    Route::get('/posts', function() {
-        $posts = App\Models\Post::with('translation')->get();
-
-        return view('front.posts', compact('posts'));
+if ($prefix == $lang->lang) {
+    echo "default";
+    require_once(__DIR__.'/routesFront.php');
+}else{
+    echo "also";
+    Route::group(['prefix' => $prefix], function() {
+        require_once(__DIR__.'/routesFront.php');
     });
-
-});
+}
