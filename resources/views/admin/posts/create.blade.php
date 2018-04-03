@@ -14,8 +14,6 @@
     @include('admin.alerts')
 
 
-
-
     <div class="list-content">
 
         <form class="form-reg" method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data">
@@ -32,7 +30,10 @@
                 </select>
 
                 <label>Image</label>
-                <input type="file" name="image">
+
+
+                <input type="file" name="image" id="upload-file">
+                <img id="upload-img" src="" alt="">
 
             </div>
 
@@ -65,7 +66,7 @@
                                     <label>{{trans('variables.title_table')}}</label>
                                      <input type="text" name="title_{{ $lang->lang }}"
                                     class="name"
-                                    data-lang="{{ $lang->lang }}">
+                                    data-lang="{{ $lang->lang }}" required>
                                 </li>
 
                                 <li>

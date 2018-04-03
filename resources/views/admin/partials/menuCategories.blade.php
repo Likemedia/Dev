@@ -7,9 +7,9 @@
         @if (count(SelectCatsTree(1, 0)) > 0)
             @foreach (SelectCatsTree(1, 0) as $key => $category)
                 <li>
-                    <a class="drop-down"
+                    {{-- <a class="drop-down"
                        href="{{ route('posts.category', [$category->category_id]) }}">> {{ $category->name }}
-                    </a>
+                    </a> --}}
 
                     <ul class="drop-hd">
 
@@ -17,7 +17,7 @@
                             <li>
                                 <a class="drop-down"
                                    href="{{ route('posts.category', [$category->category_id]) }}">> {{ $category->name }}
-                                    <i class="fa {{ !empty($categories) ? 'arrow' : '' }}"></i></a>
+                                    <i class="fa {{ !empty(SelectCatsTree(1, $category->id)) ? 'arrow' : '' }}"></i> </a>
                                 <ul class="drop-hd">
                                     @foreach (SelectCatsTree(1, $category->category_id) as $key => $category)
                                         @if (count(SelectCatsTree(1, $category->id)) > 0)
@@ -41,16 +41,19 @@
                                     @endforeach
                                 </ul>
                             </li>
-
+                        @else
+                          <li>
+                              <a href="{{ route('posts.category', [$category->category_id]) }}">> {{ $category->name }} </a>
+                          </li>
                         @endif
                     </ul>
                 </li>
             @endforeach
         @else
             <li>
-                <a class="drop-down"
+                {{-- <a class="drop-down"
                    href="{{ route('posts.category', [$category->category_id]) }}">> {{ $category->name }} <i
-                            class="fa {{ !empty($categories) ? 'arrow' : '' }}"></i></a>
+                            class="fa {{ !empty($categories) ? 'arrow' : '' }}"></i></a> --}}
             </li>
         @endif
     </ul>

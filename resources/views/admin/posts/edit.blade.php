@@ -14,8 +14,6 @@
     @include('admin.alerts')
 
 
-
-
     <div class="list-content">
 
         <form class="form-reg" method="POST" action="{{ route('posts.update', $post->id) }}" enctype="multipart/form-data">
@@ -32,9 +30,9 @@
                 </select>
 
                 <label>Image</label>
-                <input type="file" name="image">
+                <input type="file" name="image" id="upload-file">
 
-                <img src="/images/posts/{{ $post->image }}" alt="">
+                <img id="upload-img" src="/images/posts/{{ $post->image }}" alt="">
 
             </div>
 
@@ -65,7 +63,7 @@
 
                                 <li>
                                     <label>{{trans('variables.title_table')}}</label>
-                                    <input type="text" name="title_{{ $lang->lang }}" class="name" data-lang="{{ $lang->lang }}"
+                                    <input type="text" name="title_{{ $lang->lang }}" class="name" data-lang="{{ $lang->lang }}" required
                                            @foreach($post->translations as $translation)
                                            @if ($translation->lang_id == $lang->id)
                                            value="{{ $translation->title }}"

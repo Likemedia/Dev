@@ -130,12 +130,12 @@ $(document).ready(function() {
 
     });
 
-    $(document).on('change','input[type=file]', function  () {
-        var parentThat = $(this);
-        setTimeout(function(){
-            $(parentThat).closest('form').submit();
-        }, 500);
-    });
+    // $(document).on('change','input[type=file]', function  () {
+    //     var parentThat = $(this);
+    //     setTimeout(function(){
+    //         $(parentThat).closest('form').submit();
+    //     }, 500);
+    // });
 
     $(document).on('submit', '.upload-form', function(e){
         e.preventDefault();
@@ -522,7 +522,25 @@ $(document).ready(function(){
         $($id).addClass('active-content');
         return false;
     });
+
+    $("#upload-file").change(function() {
+      readURL(this);
+    });
 });
+
+function readURL(input) {
+
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+
+    reader.onload = function(e) {
+      $('#upload-img').attr('src', e.target.result);
+    }
+
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
 
 
 // $(document).ready(function(){

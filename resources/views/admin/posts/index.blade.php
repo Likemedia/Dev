@@ -14,6 +14,15 @@
         ]
     ])
 
+    @if (Request::segment(4))
+      <h5>
+        <small>Categoria </small>
+        @if (!is_null($category))
+            <b>{{ $category->translation->first()->name }}</b>
+        @endif
+      </h5>
+    @endif
+
     @if(!$posts->isEmpty())
 
         <style>
@@ -35,7 +44,6 @@
             <thead>
             <tr>
                 <th>{{trans('variables.title_table')}}</th>
-                <th>{{trans('variables.body')}}</th>
                 <th>Slug</th>
                 <th>URL</th>
                 <th>Tags</th>
@@ -51,9 +59,6 @@
                 <tr>
                     <td>
                         <p>{{ str_limit($post->translation->first()->title, 20) }}</p>
-                    </td>
-                    <td>
-                        {!! str_limit($post->translation->first()->body, 100) !!}
                     </td>
                     <td>
                         {{ $post->translation->first()->slug }}

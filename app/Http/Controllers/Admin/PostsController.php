@@ -18,7 +18,7 @@ class PostsController extends Controller
      */
     public function index()
     {
-        $posts = Post::with(['translation', 'tags'])->paginate(2);
+        $posts = Post::with(['translation', 'tags'])->paginate(15);
 
         return view('admin.posts.index', compact('posts'));
     }
@@ -46,16 +46,17 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
-//        return number_format(round(rand(499, 500) / 100, 2), 2);
-
         $stats = PostRating::first();
         $rating_from = $stats->rating_from * 100;
         $rating_to = $stats->rating_to * 100;
         $votes = rand($stats->votes_from, $stats->votes_to);
         $rating = number_format(round(rand($rating_from, $rating_to) / 100, 2), 2);
 
-        $name = time() . '-' . $request->image->getClientOriginalName();
-        $request->image->move('images/posts', $name);
+        $name = '';
+        if ($request->image) {
+          $name = time() . '-' . $request->image->getClientOriginalName();
+          $request->image->move('images/posts', $name);
+        }
 
         $post = new Post();
         $post->category_id = $request->category_id;
@@ -105,7 +106,7 @@ class PostsController extends Controller
 
         session()->flash('message', 'New item has been created!');
 
-        return redirect()->route('posts.index');
+        return redirect()->route('posts.category', $request->category_id);
     }
 
     /**
@@ -148,11 +149,11 @@ class PostsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
+
 
         $post = Post::findOrFail($id);
         $post->category_id = $request->category_id;
-        
+
         if ($request->image != null) {
             if (file_exists('images/posts/' . $post->image)) {
                 unlink('images/posts/' . $post->image);
@@ -209,7 +210,7 @@ class PostsController extends Controller
 
         session()->flash('message', 'Item has been edited!');
 
-        return redirect()->route('posts.index');
+        return redirect()->route('posts.category', $request->category_id);
 
     }
 
@@ -237,9 +238,10 @@ class PostsController extends Controller
 
     public function getPostsByCategory($categoryId)
     {
-        $posts = Post::where('category_id', $categoryId)->with('translation')->paginate(2);
+        $posts = Post::where('category_id', $categoryId)->with('translation')->paginate(15);
+        $category = Category::with('translation')->find($categoryId);
 
-        return view('admin.posts.index', compact('posts'));
+        return view('admin.posts.index', compact('posts', 'category'));
     }
 
 }
