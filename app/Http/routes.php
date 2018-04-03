@@ -57,6 +57,8 @@ Route::group(['prefix' => 'back', 'middleware' => 'auth'], function () {
 
         Route::get('/meta', 'Admin\MetasController@index')->name('metas.index');
         Route::patch('/meta', 'Admin\MetasController@update')->name('metas.update');
+
+        Route::resource('/autometa', 'Admin\AutoMetasController');
     });
 });
 
@@ -65,14 +67,14 @@ $prefix = session('applocale');
 $lang = App\Models\Lang::where('default', 1)->first();
 
 
-echo $prefix;
-echo "<br>";
+// echo $prefix;
+// echo "<br>";
 
 if ($prefix == $lang->lang) {
-    echo "default";
+    // echo "default";
     require_once(__DIR__.'/routesFront.php');
 }else{
-    echo "also";
+    // echo "also";
     Route::group(['prefix' => $prefix], function() {
         require_once(__DIR__.'/routesFront.php');
     });
