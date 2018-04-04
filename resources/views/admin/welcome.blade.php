@@ -61,6 +61,37 @@
     </section>
 </article>
 
+<div class="container">
+        {{-- <h6>Modificarea structurii meniului: </h6> --}}
+        <div id="displayer_show">
+            <div class="demo" id="labels2-3">
+                <input name="switch_show" type="checkbox" />Modificarea structurii meniului:
+             </div>
+        </div>
+        <script>
+        $(function () {
+                var data = localStorage.getItem("nestable");
+                if (data !== null) {
+                    $("input[name='switch_show']").attr("checked", "checked");
+                }
+                console.log(data);
+
+            });
+
+            $("input[name='switch_show']").click(function () {
+                if ($(this).is(":checked")) {
+                    localStorage.setItem("nestable", 1);
+                    console.log(localStorage.getItem("nestable"));
+
+                } else {
+                    localStorage.removeItem("nestable");
+                    console.log(localStorage.getItem("nestable"));
+
+                }
+
+            });
+        </script>
+</div>
 
 @stop
 

@@ -29,10 +29,10 @@
                     @endforeach
                 </select>
 
-                <label>Image</label>
+                {{-- <label>Image</label>
                 <input type="file" name="image" id="upload-file">
 
-                <img id="upload-img" src="/images/posts/{{ $post->image }}" alt="">
+                <img id="upload-img" src="/images/posts/{{ $post->image }}" alt=""> --}}
 
             </div>
 
@@ -88,7 +88,45 @@
                                         });
                                     </script>
                                 </li>
+                                <li>
+                                    <label>Image</label>
+                                    <input type="file" name="image_{{ $lang->lang }}" id="upload-file">
 
+                                    <input type="hidden" name="image_old_{{ $lang->lang }}" @foreach($post->translations as $translation)
+                                    @if ($translation->lang_id == $lang->id)
+                                    value="{{ $translation->image }}"
+                                     @endif
+                                     @endforeach>
+
+                                    @foreach($post->translations as $translation)
+                                    @if ($translation->lang_id == $lang->id)
+
+                                    <img id="upload-img" src="/images/posts/{{ $translation->image }}"  alt="" width="200px">
+                                     @endif
+                                     @endforeach
+                                    {{-- <img id="upload-img" src="/images/posts/{{ $post->image }}" alt=""> --}}
+                                    {{-- <img id="upload-img" src="" alt="" width="200px"> --}}
+                                </li>
+                                <li>
+                                    <li>
+                                        <label>Image Title</label>
+                                        <input type="text" name="img_title_{{ $lang->lang }}"           @foreach($post->translations as $translation)
+                                        @if ($translation->lang_id == $lang->id)
+                                        value="{{ $translation->image_title }}"
+                                         @endif
+                                         @endforeach>
+                                    </li>
+                                </li>
+                                <li>
+                                    <li>
+                                        <label>Image Alt</label>
+                                        <input type="text" name="img_alt_{{ $lang->lang }}"@foreach($post->translations as $translation)
+                                        @if ($translation->lang_id == $lang->id)
+                                        value="{{ $translation->image_alt }}"
+                                         @endif
+                                         @endforeach>
+                                    </li>
+                                </li>
                             </ul>
                         </div>
 

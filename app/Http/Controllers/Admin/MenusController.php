@@ -6,6 +6,9 @@ use App\Models\Menu;
 use App\Models\Post;
 use App\Models\Category;
 use App\Models\Page;
+use App\Models\MenuTranslation;
+use App\Models\PageTranslation;
+use App\Models\CategoryTranslation;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
@@ -124,8 +127,12 @@ class MenusController extends Controller
         dd($id);
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
+        if($id == 0){
+            $id = $request->parent_id;
+        }
+
         $menu = Menu::findOrFail($id);
 
         $menus = Menu::all();
@@ -164,7 +171,7 @@ class MenusController extends Controller
             $menu->translations()->create([
                 'lang_id' => $lang->id,
                 'name' => request('name_' . $lang->lang),
-                'url' => request('link_' . $lang->lang),
+                'url' => request('link'),
             ]);
         endforeach;
 
@@ -229,7 +236,7 @@ class MenusController extends Controller
             $menu->translations()->create([
                 'lang_id' => $lang->id,
                 'name' => $category->translationByLanguage($lang->id)->first()->name,
-                'url' => $url.'/'.$category->translationByLanguage($lang->id)->first()->slug,
+                'url' => '/'.$category->translationByLanguage($lang->id)->first()->slug,
             ]);
         endforeach;
 
@@ -327,7 +334,6 @@ class MenusController extends Controller
 
     public function movePosts_(Request $request)
     {
-        // dd($request->all());
         $posts = Post::where('menu_id', $request->parent_id)->get();
 
         $addToId = $request->add;
@@ -349,4 +355,29 @@ class MenusController extends Controller
         return redirect()->route('menus.index');
     }
 
+    public function cleanMenus()
+    {
+        $menus = MenuTranslation::get();
+        if (!empty($menus)) {
+            foreach ($menus as $key => $menu) {
+                $page = PageTranslation::where('slug', str_replace('/page/', '', $menu->url))->first();
+                $category = CategoryTranslation::where('slug', str_replace('/', '', $menu->url))->first();
+
+                if ((is_null($page)) && (is_null($category))) {
+                    $menuItem = Menu::find($menu->menu_id);
+                    if (!is_null($menuItem)) {
+                        $menusToDelete = MenuTranslation::where('menu_id', $menuItem->id)->get();
+                        if (!empty($menusToDelete)) {
+                            foreach ($menusToDelete as $key => $menuToDelete) {
+                                MenuTranslation::where('id', $menuToDelete->id)->delete();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        session()->flash('message', 'Menus  cleaned');
+
+        return redirect()->route('menus.index');
+    }
 }

@@ -45,7 +45,7 @@
                                     @if (!empty($menus))
                                     <select class="form-control" name="add">
                                         @foreach($menus as $category)
-                                        <option value="{{ $category->id }}">{{ $category->translation()->first()->name }}</option>
+                                        <option value="{{ $category->id }}">{{ !is_null($category->translation()->first()) ?  $category->translation()->first()->name : '' }}</option>
                                         @endforeach
                                     </select>
                                     @endif
@@ -101,37 +101,42 @@
                                         class="name form-control"
                                         data-lang="{{ $lang->lang }}">
                                 </li>
-                                <li>
-                                    <label>Link</label>
-                                    <select class="form-control categorySelect" name="link_{{ $lang->lang }}" >
-                                        @if (!empty($pages))
-                                            <optgroup label="Pagini Statice">
-                                            @foreach ($pages as $key => $page)
-                                                <option value="/page/{{ $page->translation()->first()->slug }}">{{ $page->translationByLanguage($lang->id)->first()->title }}</option>
-                                            @endforeach
-                                            </optgroup>
-                                        @endif
-                                        @if (!empty($categories))
-                                        <optgroup label="Categorii">
-                                            @foreach ($categories as $key => $category)
-                                                <option data="category" data-id="{{ $category->id }}" value="{{ $category->translationByLanguage($lang->id)->first()->name }}">{{ $category->translation()->first()->name }}</option>
-                                            @endforeach
-                                        </optgroup>
-                                        @endif
-                                    </select>
-                                </li>
-                                <li class="subcategories hide">
-                                    <br>
-                                    <input type="checkbox" name="subcategories" id="subcats{{ $lang->lang }}">
-                                    <label for="subcats{{ $lang->lang }}">Bifati pentru a adauga si toate subcategoriile?</label>
-                                </li>
-                                <li>
-                                    <input style="margin-top: 10px;" type="submit" class="btn btn-primary" value="{{trans('variables.save_it')}}">
-                                </li>
+
                             </ul>
                         </div>
                     </div>
                     @endforeach
+                    <div class="">
+                        <ul>
+                            <li>
+                                <label>Link</label>
+                                <select class="form-control categorySelect" name="link" >
+                                    @if (!empty($pages))
+                                        <optgroup label="Pagini Statice">
+                                        @foreach ($pages as $key => $page)
+                                            <option value="/page/{{ $page->translation()->first()->slug }}">{{ !is_null($page->translation()->first()) ? $page->translation()->first()->title : '' }}</option>
+                                        @endforeach
+                                        </optgroup>
+                                    @endif
+                                    @if (!empty($categories))
+                                    <optgroup label="Categorii">
+                                        @foreach ($categories as $key => $category)
+                                            <option data="category" data-id="{{ $category->id }}" value="{{ !is_null($category->translation()->first()) ? $category->translation()->first()->name : '' }}">{{ $category->translation()->first()->name }}</option>
+                                        @endforeach
+                                    </optgroup>
+                                    @endif
+                                </select>
+                            </li>
+                            <li class="subcategories hide">
+                                <br>
+                                <input type="checkbox" name="subcategories" id="subcats{{ $lang->lang }}">
+                                <label for="subcats{{ $lang->lang }}">Bifati pentru a adauga si toate subcategoriile?</label>
+                            </li>
+                            <li>
+                                <input style="margin-top: 10px;" type="submit" class="btn btn-primary" value="{{trans('variables.save_it')}}">
+                            </li>
+                        </ul>
+                    </div>
                     <input type="hidden" name="type" value="page" id="atributionType">
                     <input type="hidden" name="categoryId" value="" id="categoryId">
             </form>
@@ -140,7 +145,39 @@
     </div>
 </div>
 </div>
-
+<!-- move articles on delete Modal -->
+<div class="modal fade bd-example-modal-lg" id="addCategory_delete" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+                <h5 class="modal-title" id="exampleModalLabel">Delete menu</h5>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    Doriti sa stergeti elementul menu?
+                </div>
+                <form action="{{ route('menus.destroy', 0) }}" method="post">
+                    {{ csrf_field() }}
+                    {{ method_field("DELETE") }}
+                    <input type="hidden" name="parent_id" class="parent_id" value="0"/>
+                    <div class="list-content">
+                        @include('admin.alerts')
+                        <div class="part full-part">
+                            <ul>
+                                <li>
+                                    <input style="margin-top: 10px;" type="submit" class="btn btn-primary" value="sterge">
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     $('.categorySelect').on('change', function(){

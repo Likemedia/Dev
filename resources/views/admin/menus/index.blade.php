@@ -19,18 +19,37 @@
             <hr>
             <div id="container">
                 <a class="btn btn-primary modal-id" data-toggle="modal" data-target="#addCategory" data-id="0"><i class="fa fa-plus"></i></a>
+                <a href="{{ route('menus.clean') }}" class="btn btn-primary">Sterge toate puncte de meniu care nu mai exista</a>
             </div>
 
             <div class="dd" id="nestable-output">
 
                 {!! SelectMenusTree(1, 0, $curr_id=null) !!}
-
+                <div class="nestable-stop"></div>
             </div>
-
+            <style media="screen">
+                .dd{
+                    position: relative;
+                }
+                .nestable-stop{
+                    position: absolute;
+                    width: 100%;
+                    height: 127%;
+                    top: 0;
+                    left: 0;
+                    background-color:rgba(0, 0, 0, 0.5);
+                }
+            </style>
             <script>
 
-                $('#nestable-output').nestable();
+            var data = localStorage.getItem("nestable");
+            if (data !== null) {
+                jQuery(function($){
+                    $('.nestable-stop').hide();
+                })
 
+                $('#nestable-output').nestable();
+            }
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-Token': $('meta[name="_token"]').attr('content')
@@ -39,8 +58,10 @@
 
                 $(document).ready(function () {
                     var updateOutput = function (e) {
-                        console.log('called');
                         var list = e.length ? e : $(e.target), output = list.data('output');
+
+                        var data = localStorage.getItem("nestable");
+                        if (data !== null) {
 
                         $.ajax({
                             method: "POST",
@@ -62,6 +83,8 @@
                             alert("Unable to save new list order: " + errorThrown);
                         });
                     };
+
+                    }
 
                     $('#nestable-output').nestable({
                         group: 1,

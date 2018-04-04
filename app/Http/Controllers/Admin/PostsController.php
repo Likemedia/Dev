@@ -52,15 +52,17 @@ class PostsController extends Controller
         $votes = rand($stats->votes_from, $stats->votes_to);
         $rating = number_format(round(rand($rating_from, $rating_to) / 100, 2), 2);
 
-        $name = '';
-        if ($request->image) {
-          $name = time() . '-' . $request->image->getClientOriginalName();
-          $request->image->move('images/posts', $name);
-        }
+        foreach ($this->langs as $lang):
+            $name[$lang->lang] = '';
+            if ($request->file('image_'. $lang->lang)) {
+              $name[$lang->lang] = time() . '-' . $request->file('image_'. $lang->lang)->getClientOriginalName();
+              $request->file('image_'. $lang->lang)->move('images/posts', $name[$lang->lang]);
+            }
+        endforeach;
 
         $post = new Post();
         $post->category_id = $request->category_id;
-        $post->image = $name;
+        $post->image = $name['ro'];
         $post->votes = $votes;
         $post->rating =  $rating;
         $post->save();
@@ -77,6 +79,9 @@ class PostsController extends Controller
                 'meta_title' => request('meta_title_' . $lang->lang),
                 'meta_keywords' => request('meta_keywords_' . $lang->lang),
                 'meta_description' => request('meta_description_' . $lang->lang),
+                'image' => $name[$lang->lang],
+                'image_title' => request('img_title_' . $lang->lang),
+                'image_alt' => request('img_alt_' . $lang->lang),
             ]);
 
             if ( (request('tag_' . $lang->lang) != null) && !(request('tag_' . $lang->lang)[0] == "") ) {
@@ -102,7 +107,6 @@ class PostsController extends Controller
             }
 
         endforeach;
-
 
         session()->flash('message', 'New item has been created!');
 
@@ -149,21 +153,28 @@ class PostsController extends Controller
      */
     public function update(Request $request, $id)
     {
-
+        // dd($request->all());
 
         $post = Post::findOrFail($id);
         $post->category_id = $request->category_id;
 
-        if ($request->image != null) {
-            if (file_exists('images/posts/' . $post->image)) {
-                unlink('images/posts/' . $post->image);
+        // if ($request->image != null) {
+        //     if (file_exists('images/posts/' . $post->image)) {
+        //         unlink('images/posts/' . $post->image);
+        //     }
+        //
+        //     $name = time() . '-' . $request->image->getClientOriginalName();
+        //     $request->image->move('images/posts', $name);
+        //
+        //     $post->image = $name;
+        // }
+        foreach ($this->langs as $lang):
+            $name[$lang->lang] = '';
+            if ($request->file('image_'. $lang->lang)) {
+              $name[$lang->lang] = time() . '-' . $request->file('image_'. $lang->lang)->getClientOriginalName();
+              $request->file('image_'. $lang->lang)->move('images/posts', $name[$lang->lang]);
             }
-
-            $name = time() . '-' . $request->image->getClientOriginalName();
-            $request->image->move('images/posts', $name);
-
-            $post->image = $name;
-        }
+        endforeach;
 
         $post->save();
 
@@ -181,6 +192,9 @@ class PostsController extends Controller
                 'meta_title' => request('meta_title_' . $lang->lang),
                 'meta_keywords' => request('meta_keywords_' . $lang->lang),
                 'meta_description' => request('meta_description_' . $lang->lang),
+                'image' => !empty($name[$lang->lang]) ? $name[$lang->lang] : request('image_old_' . $lang->lang),
+                'image_title' => request('img_title_' . $lang->lang),
+                'image_alt' => request('img_alt_' . $lang->lang),
             ]);
 
             if ( (request('tag_' . $lang->lang) != null) && !(request('tag_' . $lang->lang)[0] == "") ) {

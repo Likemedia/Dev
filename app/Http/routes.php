@@ -41,6 +41,7 @@ Route::group(['prefix' => 'back', 'middleware' => 'auth'], function () {
     Route::post('/menus/move/posts_', 'Admin\MenusController@movePosts_')->name('menus.move.posts_');
     Route::post('/menus/part', 'Admin\MenusController@partialSave')->name('menus.partial.save');
     Route::post('/menus/categories/assignment', 'Admin\MenusController@assignmentCategory')->name('menus.assignment.category');
+    Route::get('/menus/items/clean', 'Admin\MenusController@cleanMenus')->name('menus.clean');
 
     Route::resource('/tags', 'Admin\TagsController');
 

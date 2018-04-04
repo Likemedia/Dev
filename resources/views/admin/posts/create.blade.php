@@ -29,12 +29,6 @@
                     @endforeach
                 </select>
 
-                <label>Image</label>
-
-
-                <input type="file" name="image" id="upload-file">
-                <img id="upload-img" src="" alt="">
-
             </div>
 
 
@@ -79,7 +73,23 @@
                                         });
                                     </script>
                                 </li>
-
+                                <li>
+                                    <label>Image</label>
+                                    <input type="file" name="image_{{ $lang->lang }}" id="upload-file">
+                                    <img id="upload-img" src="" alt="" width="200px">
+                                </li>
+                                <li>
+                                    <li>
+                                        <label>Image Title</label>
+                                        <input type="text" name="img_title_{{ $lang->lang }}">
+                                    </li>
+                                </li>
+                                <li>
+                                    <li>
+                                        <label>Image Alt</label>
+                                        <input type="text" name="img_alt_{{ $lang->lang }}">
+                                    </li>
+                                </li>
                             </ul>
                         </div>
 
