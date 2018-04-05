@@ -58,6 +58,8 @@ Route::group(['prefix' => 'back', 'middleware' => 'auth'], function () {
 
         Route::get('/meta', 'Admin\MetasController@index')->name('metas.index');
         Route::patch('/meta', 'Admin\MetasController@update')->name('metas.update');
+
+        Route::resource('/autometa', 'Admin\AutoMetasController');
     });
 });
 
