@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\AutoMeta;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -37,7 +38,9 @@ class AutoMetasController extends Controller
 
     public function create()
     {
-    	return view('admin.autometas.create');
+        $categories = Category::where('level', 1)->where('autometa_id', null)->get();
+
+    	return view('admin.autometas.create', compact('categories'));
     }
 
 
@@ -56,6 +59,16 @@ class AutoMetasController extends Controller
     	$meta->var5 = $request->var5;
     	$meta->save();
 
+        if ($request->category != null) {
+
+            $categories = Category::whereIn('id', [$request->category])->get();
+
+            foreach ($categories as $category) {
+                $category->autometa_id = $meta->id;
+                $category->save();
+            }
+        }
+
     	session()->flash('message', 'New item has been created!');
 
     	return redirect()->route('autometa.index');
@@ -65,11 +78,28 @@ class AutoMetasController extends Controller
     {
     	$meta = AutoMeta::findOrFail($id);
 
-    	return view('admin.autometas.edit', compact('meta'));
+        $categories = Category::where('level', 1)->where('autometa_id', null)->get();
+
+    	return view('admin.autometas.edit', compact('meta', 'categories'));
     }
 
     public function update(Request $request, $id)
     {
+        if ($request->category != null) {
+            $cats = Category::where('autometa_id', $id)->get();
+            foreach ($cats as $category) {
+                $category->autometa_id = null;
+                $category->save();
+            }
+
+            $categories = Category::whereIn('id', $request->category)->get();
+
+            foreach ($categories as $category) {
+                $category->autometa_id = $id;
+                $category->save();
+            }
+        }
+
     	$meta = AutoMeta::findOrFail($id);
     	$meta->lang_id = $request->lang_id;
     	$meta->name = $request->name;

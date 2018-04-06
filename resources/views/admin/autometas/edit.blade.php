@@ -20,7 +20,7 @@
             {{ csrf_field() }} {{ method_field('PATCH')}}
 
                     <div class="tab-content active-content" >
-                        <div class="part full-part">
+                        <div class="part left-part">
 
                             <ul>
 
@@ -87,6 +87,21 @@
                             </ul>
 
                             <input type="submit" value="{{trans('variables.save_it')}}">
+                        </div>
+
+                        <div class="part right-part">
+                            <h5>Categorii</h5>
+                            <hr>
+                            @foreach(\App\Models\Category::all() as $category)
+                                <input
+                                        type="checkbox"
+                                        name="category[]"
+                                        value="{{ $category->id }}"
+                                        {{ ($category->autometa_id == $meta->id) ? 'checked' : ''  }}
+                                >
+                                {{ $category->translation->first()->name }} <br />
+                            @endforeach
+
                         </div>
                     </div>
 

@@ -15,7 +15,7 @@
     ])
 
 
-    @if(count($metas))
+    @if(count($products))
 
         <table class="el-table" id="tablelistsorter">
             <thead>
@@ -27,24 +27,24 @@
             </tr>
             </thead>
             <tbody>
-            @foreach($metas as $meta)
-                <tr id="{{ $meta->id }}">
+            @foreach($products as $product)
+                <tr id="{{ $product->id }}">
 
-                   
-                    <td>
-                       {{ $meta->name }}
-                    </td>
-                    <td>
-                        {{ $meta->description }}
-                    </td>
 
                     <td>
-                        <a href="{{ route('autometa.edit', $meta->id) }}">
+                        {{ $product->name }}
+                    </td>
+                    <td>
+                        {{ $product->description }}
+                    </td>
+
+                    <td>
+                        <a href="{{ route('products.edit', $product->id) }}">
                             <i class="fa fa-edit"></i>
                         </a>
                     </td>
                     <td class="destroy-element">
-                        <form action="{{ route('autometa.destroy', $meta->id) }}" method="post">
+                        <form action="{{ route('products.destroy', $product->id) }}" method="post">
                             {{ csrf_field() }} {{ method_field('DELETE') }}
                             <button type="submit" class="btn-link">
                                 <a>
@@ -55,7 +55,7 @@
                     </td>
                 </tr>
             @endforeach
-           
+
             </tbody>
             <tfoot>
             <tr>
@@ -64,13 +64,6 @@
             </tfoot>
         </table>
 
-        @foreach($metas as $meta)
-              
-           {{ $meta->generateDescription() }} <br>
-           {{ $meta->generateTitle() }}
-
-           <br><br><br><br>
-        @endforeach
     @else
         <div class="empty-response">{{trans('variables.list_is_empty')}}</div>
     @endif
