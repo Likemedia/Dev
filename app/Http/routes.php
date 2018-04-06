@@ -48,6 +48,7 @@ Route::group(['prefix' => 'back', 'middleware' => 'auth'], function () {
     Route::get('/posts/category/{category}', 'Admin\PostsController@getPostsByCategory')->name('posts.category');
 
     Route::resource('/products', 'Admin\ProductsController');
+    Route::resource('/parameters', 'Admin\ParametersController');
 
     Route::group(['prefix' => 'settings'], function () {
 

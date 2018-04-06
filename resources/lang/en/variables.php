@@ -22,6 +22,7 @@ return [
     'home' => 'Home',
     'title_table' => 'Title',
     'edit_table' => 'Edit',
+    'view_table' => 'View',
     'active_table' => 'Active',
     'position_table' => 'Position',
     'delete_table' => 'Delete',
