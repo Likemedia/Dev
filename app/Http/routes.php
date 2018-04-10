@@ -50,6 +50,8 @@ Route::group(['prefix' => 'back', 'middleware' => 'auth'], function () {
     Route::resource('/products', 'Admin\ProductsController');
     Route::resource('/parameters', 'Admin\ParametersController');
 
+    Route::post('/parameters/{id}/field', 'Admin\FieldsController@store')->name('fields.store');
+
     Route::group(['prefix' => 'settings'], function () {
 
         Route::resource('/languages', 'Admin\LanguagesController');

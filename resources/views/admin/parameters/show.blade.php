@@ -2,57 +2,77 @@
 @include('admin.nav-bar')
 @include('admin.left-menu')
 @section('content')
-
-
-// display item, and form to add all parameters
-
-<!--     <div class="list-content">
+<div class="table-content">
+    <div class="part part-left">
         <div class="tab-area">
-            @include('admin.alerts')
-            <ul class="nav nav-tabs nav-tabs-bordered">
-                    @foreach ($langs as $key => $lang)
-                        <li class="nav-item">
-                            <a href="#{{ $lang->lang }}" class="nav-link  {{ $key == 0 ? ' open active' : '' }}"
-                               data-target="#{{ $lang->lang }}">{{ $lang->lang }}</a>
-                        </li>
-                    @endforeach
+            <h6>
+               
+            </h6>
+        </div>
+    </div>
+</div>
+
+
+<div class="list-content">
+    <div class="tab-area">
+        <ul class="nav nav-tabs nav-tabs-bordered">
+        </ul>
+    </div>
+    <div class="tab-content active-content">
+        <div class="part left-part">
+            <h6> {{ $parameter->translation->first()->title }}</h6>
+            <ul>
+                @foreach($parameter->fields as $field)
+                <li>
+                    {{ $field->id }}
+                </li>
+                @endforeach
             </ul>
         </div>
+        <div class="part right-part">
+            <h6>Add new field</h6>
+            <form method="post" action="{{ route('fields.store', $parameter->id) }}">
+                {{ csrf_field() }} 
+                <label>Type</label>
+                <select class="form-control">
+                    <option>Text</option>
+                    <option>Select</option>
+                    <option>Textarea</option>
+                </select>
 
-        <form class="form-reg" method="POST" action="{{ route('parameters.store') }}">
-            {{ csrf_field() }}
+                <hr>
 
+                <label>Required</label> <br>
+                <input type="radio" name="required" value="yes"> Yes
+                <input type="radio" name="required" value="no"> No
 
-                @foreach ($langs as $lang)
+                <hr>
 
-                    <div class="tab-content {{ $loop->first ? ' active-content' : '' }}" id={{ $lang->lang }}>
-                        <div class="part full-part">
+                <label>Name</label>
+                <input type="text" name="name" class="form-control">
 
-                            <ul>
-                                <li>
-                                    <label>{{trans('variables.title_table')}}</label>
-                                    <input type="text" name="name_{{ $lang->lang }}" class="name"
-                                           data-lang="{{ $lang->lang }}">
-                                </li>
+                <hr>
 
-                            </ul>
+                <label>Field Name</label>
+                <input type="text" name="field_name" class="form-control">
 
-                        <input type="submit" value="{{trans('variables.save_it')}}">
-                            
-                        </div>
+                <hr>
 
-                        
-                    </div>
-                @endforeach
+                <label>Select (separate options with a coma)</label>
+                <input type="text" name="pattern" class="form-control">
 
+                <hr>
 
-        </form>
-    </div> -->
+                <input type="submit" name="Submit" class="btn btn-primary">
 
+            </form>
+        </div>
+    </div>
+</div>
 @stop
 
 @section('footer')
-    <footer>
-        @include('admin.footer')
-    </footer>
+<footer>
+    @include('admin.footer')
+</footer>
 @stop

@@ -39,7 +39,7 @@ class ParametersController extends Controller
 
     public function show($id)
     {
-        $parameter = Parameter::with('translation')->findOrFail($id);
+        $parameter = Parameter::with(['translation', 'fields'])->findOrFail($id);
 
         return view('admin.parameters.show', compact('parameter'));
     }

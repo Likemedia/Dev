@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateProductTranslationsTable extends Migration
+class CreateFieldTranslationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,23 +13,20 @@ class CreateProductTranslationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('product_translations', function (Blueprint $table) {
+        Schema::create('field_translations', function (Blueprint $table) {
             $table->engine = 'InnoDB';
 
             $table->increments('id');
-            $table->unsignedInteger('product_id');
+            $table->unsignedInteger('field_id');
             $table->unsignedInteger('lang_id');
-            $table->string('alias');
-            $table->string('seo_h1');
-            $table->string('seo_title');
-            $table->string('seo_keywords');
-            $table->text('seo_description');
+            $table->string('name');
+            $table->string('field_name');
+            $table->text('generate');
+            $table->timestamps();
 
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->foreign('field_id')->references('id')->on('fields')->onDelete('cascade');
             $table->foreign('lang_id')->references('id')->on('lang')->onDelete('cascade');
 
-
-            $table->timestamps();
         });
     }
 
@@ -40,6 +37,6 @@ class CreateProductTranslationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('product_translations');
+        Schema::dropIfExists('field_translations');
     }
 }

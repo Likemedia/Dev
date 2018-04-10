@@ -4,12 +4,6 @@
 @section('content')
 
     @include('admin.speedbar')
-    {{--@include('list-elements', [--}}
-    {{--'actions' => [--}}
-    {{--trans('variables.elements_list') => urlForFunctionLanguage($lang, ''),--}}
-    {{--trans('variables.add_element') => urlForFunctionLanguage($lang, 'item/create'),--}}
-    {{--]--}}
-    {{--])--}}
 
 
     <div class="list-content">
@@ -20,7 +14,7 @@
                     @foreach ($langs as $key => $lang)
                         <li class="nav-item">
                             <a href="#{{ $lang->lang }}" class="nav-link  {{ $key == 0 ? ' open active' : '' }}"
-                               data-target="#{{ $lang->lang }}">{{ $lang->descr }}</a>
+                               data-target="#{{ $lang->lang }}">{{ $lang->lang }}</a>
                         </li>
                     @endforeach
                 @endif

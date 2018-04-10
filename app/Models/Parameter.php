@@ -17,4 +17,9 @@ class Parameter extends Model
 
         return $this->hasMany(ParameterTranslation::class)->where('lang_id', $lang);
     }
+
+    public function fields()
+    {
+    	return $this->hasMany(Field::class);
+    }
 }
