@@ -144,6 +144,7 @@
                     </div>
                     <input type="hidden" name="type" value="page" id="atributionType">
                     <input type="hidden" name="categoryId" value="" id="categoryId">
+                    <input type="hidden" name="groupId" value="{{ Request::segment(4) }}">
             </form>
             </div>
         </div>

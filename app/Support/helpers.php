@@ -309,10 +309,10 @@ function SelectGoodsCatsTree($lang_id, $id, $curr_id = null, $level = 0)
  * @param null $curr_id
  * @return string
  */
-function SelectMenusTree($lang_id, $id, $curr_id = null, $level = 0)
+function SelectMenusTree($lang_id, $id, $curr_id = null, $level = 0, $groupId)
 {
-
     $menu_id_by_level = DB::table('menus')
+        ->where('group_id', $groupId)
         ->where('parent_id', $id)
         ->orderBy('position', 'asc')
         ->get();
@@ -371,7 +371,7 @@ function SelectMenusTree($lang_id, $id, $curr_id = null, $level = 0)
 
            </div>',
 
-                SelectMenusTree($lang_id, $entry->menu_id, 0, $level)
+                SelectMenusTree($lang_id, $entry->menu_id, 0, $level, $groupId)
             );
         }
         $result[] = '</ol>';

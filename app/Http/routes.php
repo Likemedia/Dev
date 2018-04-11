@@ -35,6 +35,7 @@ Route::group(['prefix' => 'back', 'middleware' => 'auth'], function () {
     Route::post('/categories/part', 'Admin\CategoriesController@partialSave')->name('categories.partial.save');
 
     Route::resource('/menus', 'Admin\MenusController');
+    // Route::resource('/menus/{}', 'Admin\MenusController');
     Route::post('/menus/move/posts', 'Admin\MenusController@movePosts')->name('menus.move.posts');
     Route::post('/menus/change', 'Admin\MenusController@change')->name('menus.change');
     Route::post('/menus/part', 'Admin\MenusController@partialSave')->name('menus.partial.save');
@@ -42,6 +43,10 @@ Route::group(['prefix' => 'back', 'middleware' => 'auth'], function () {
     Route::post('/menus/part', 'Admin\MenusController@partialSave')->name('menus.partial.save');
     Route::post('/menus/categories/assignment', 'Admin\MenusController@assignmentCategory')->name('menus.assignment.category');
     Route::get('/menus/items/clean', 'Admin\MenusController@cleanMenus')->name('menus.clean');
+    Route::get('/menus/group/{id}', 'Admin\MenusController@getMenuByGroup')->name('menus.group');
+
+    // Groups menus
+    Route::resource('/groups', 'Admin\MenuGroupsController');
 
     Route::resource('/tags', 'Admin\TagsController');
 
@@ -73,5 +78,4 @@ if ($prefix == $lang->lang) {
     Route::group(['prefix' => $prefix], function() {
         require_once(__DIR__.'/routesFront.php');
     });
-
 }

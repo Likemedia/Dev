@@ -8,7 +8,7 @@ class Menu extends Model
 {
     protected $table = 'menus';
 
-    protected $fillable = ['parent_id', 'alias', 'level', 'position'];
+    protected $fillable = ['parent_id', 'alias', 'level', 'position', 'group_id'];
 
     public function translations() {
         return $this->hasMany(MenuTranslation::class);

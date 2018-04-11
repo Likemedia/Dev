@@ -6,8 +6,8 @@
     @include('admin.speedbar')
     @include('admin.list-elements', [
         'actions' => [
-            trans('variables.elements_list') => urlForFunctionLanguage($lang, ''),
-            trans('variables.add_element') => urlForFunctionLanguage($lang, 'item/create'),
+            trans('variables.elements_list') => url($lang, ''),
+            trans('variables.add_element') => url($lang, 'item/create'),
         ]
     ])
 

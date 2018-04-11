@@ -24,7 +24,9 @@
 
             <div class="dd" id="nestable-output">
 
-                {!! SelectMenusTree(1, 0, $curr_id=null) !!}
+                {{-- {{ dd(Request::segment(4)) }} --}}
+
+                {!! SelectMenusTree(1, 0, $curr_id=null, 0, Request::segment(4)) !!}
                 <div class="nestable-stop"></div>
             </div>
             <style media="screen">
