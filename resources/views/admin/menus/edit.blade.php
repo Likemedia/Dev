@@ -12,24 +12,23 @@
                 @if (!empty($langs))
                     @foreach ($langs as $key => $lang)
                         <li class="nav-item">
-                            <a href="#{{ $lang->lang }}" class="nav-link  {{ $key == 0 ? ' open active' : '' }}"
-                               data-target="#{{ $lang->lang }}">{{ $lang->descr }}</a>
+                            <a href="#{{ $lang->lang }}" class="nav-link  {{ $loop->first == 0 ? ' open active' : '' }}"
+                               data-target="#{{ $lang->lang }}">{{ $lang->lang }}</a>
                         </li>
                     @endforeach
                 @endif
             </ul>
         </div>
 
-        <form class="form-reg" method="post" action="{{ route('categories.update', $menuItem->id) }}" enctype="multipart/form-data">
+        <form class="form-reg" method="post" action="{{ route('menus.update', $menuItem->id) }}" enctype="multipart/form-data">
             {{ csrf_field() }} {{ method_field('PATCH') }}
 
             @if (!empty($langs))
 
-
                 @foreach ($langs as $lang)
 
                     <div class="tab-content {{ $loop->first == 0 ? ' active-content' : '' }}" id={{ $lang->lang }}>
-                        <div class="part left-part">
+                        <div class="part full-part">
 
                             <ul>
                                 <li>
@@ -48,16 +47,39 @@
                             </ul>
                         </div>
 
-                        <div class="part right-part">
-                            <ul>
-                                <input type="submit" value="{{trans('variables.save_it')}}">
-                            </ul>
 
-                        </div>
                     </div>
                 @endforeach
             @endif
 
+            <div class="part full-part">
+                <ul>
+                    <li>
+                      <label>Link</label>
+                      <select class="form-control categorySelect" name="link" >
+                          @if (!empty($pages))
+                              <optgroup label="Pagini Statice">
+                              @foreach ($pages as $key => $page)
+                                  <option value="/page/{{ $page->translation()->first()->slug }}">{{ !is_null($page->translation()->first()) ? $page->translation()->first()->title : '' }}</option>
+                              @endforeach
+                              </optgroup>
+                          @endif
+                          @if (!empty($categories))
+                          <optgroup label="Categorii">
+                              @foreach ($categories as $key => $category)
+                                  <option data="category" data-id="{{ $category->id }}" value="{{ !is_null($category->translation()->first()) ? $category->translation()->first()->name : '' }}">{{ $category->translation()->first()->name }}</option>
+                              @endforeach
+                          </optgroup>
+                          @endif
+                      </select>
+                    </li>
+                    <li>
+                      <br><br>
+                      <input type="submit" value="{{trans('variables.save_it')}}">
+                    </li>
+                </ul>
+
+            </div>
         </form>
     </div>
 

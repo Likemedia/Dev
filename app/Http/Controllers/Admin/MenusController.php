@@ -86,72 +86,82 @@ class MenusController extends Controller
     public function edit($id)
     {
         $menuItem = Menu::with('translations')->findOrFail($id);
+        $categories = Category::where('parent_id', 0)->get();
+        $pages = Page::with('translation')->where('active', 1)->get();
 
-        return view('admin.menus.edit', compact('menuItem'));
+        return view('admin.menus.edit', compact('menuItem', 'categories', 'pages'));
     }
 
     public function update(Request $request, $id)
     {
         $menu = Menu::findOrFail($id);
 
-        if ($request->image != null) {
-            if (file_exists('/images/menus/' . $menu->image)) {
-                unlink('/images/menus/' . $menu->image);
-            }
-            $name = time() . '-' . $request->image->getClientOriginalName();
-            $request->image->move('images/menus', $name);
-
-            $menu->image = $name;
-        }
-
-        $menu->translations()->delete();
-
         foreach ($this->langs as $lang):
-            $menu->translations()->create([
-                'lang_id' => $lang->id,
+            $menu->translations()->where('menu_id', $id)->where('lang_id', $lang->id)->update([
+                'url' => request('link'),
                 'name' => request('name_' . $lang->lang),
-                'description' => request('description_' . $lang->lang),
-                'slug' => request('slug_' . $lang->lang),
-                'meta_title' => request('meta_title_' . $lang->lang),
-                'meta_keywords' => request('meta_keywords_' . $lang->lang),
-                'meta_description' => request('meta_description_' . $lang->lang),
-                'alt_attribute' => request('alt_text_' . $lang->lang),
-                'image_title' => request('title_' . $lang->lang)
             ]);
         endforeach;
 
         session()->flash('message', 'New item has been created!');
 
         return redirect()->route('menus.index');
-
-        dd($id);
     }
 
     public function destroy(Request $request, $id)
     {
-        if($id == 0){
-            $id = $request->parent_id;
-        }
+        // dd($request->all());
+
+        if($id == 0){ $id = $request->parent_id; }
 
         $menu = Menu::findOrFail($id);
 
-        $menus = Menu::all();
+        if ($request->get('with_children') == 'on') {
+          // level 1
+          if (!is_null($menu)) {
+              $parent = $this->deleteOneMenuItem($menu, (int)$id);
+              // level 2
+              $submenus1 = Category::where('parent_id', $id)->get();
+              if (!empty($submenus1)) {
+                  foreach ($submenus1 as $submenu1) {
+                      $parent = $this->deleteOneMenuItem($submenu1, $parent);
+                      // level 3
+                      $submenus2 = Category::where('parent_id', $submenu1->id)->get();
+                      if (!empty($submenus2)) {
+                          foreach ($submenus2 as $key => $submenus2->id) {
+                              $parent = $this->deleteOneMenuItem($submenu2, $parent);
+                              // level 3
+                              $submenus3 = Category::where('parent_id', $submenu2->id)->get();
+                              if (!empty($submenus3)) {
+                                  foreach ($submenus3 as $key => $submenus3) {
+                                      $parent = $this->deleteOneMenuItem($submenu3, $parent);
+                                      // level 4
+                                      $submenus = Category::where('parent_id', $submenu->id)->get();
+                                      if (!empty($submenus)) {
+                                          foreach ($submenus as $key => $submenus) {
+                                              $parent = $this->deleteOneMenuItem($submenu, $parent);
+                                          }
+                                      }
+                                  }
+                              }
+                          }
+                      }
+                  }
+              }
+          }
 
-        foreach ($menus as $cat):
-            if ($menu->id == $cat->parent_id) {
-                session()->flash('message', 'Can\'t delete this item, because it has children.');
-
-                return redirect()->route('menus.index');
-            }
-        endforeach;
-
-        if (file_exists('/images/menus/' . $menu->image)) {
-            unlink('/images/menus/' . $menu->image);
         }
 
         $menu->delete();
 
         return redirect()->back();
+    }
+
+    public function deleteOneMenuItem($menu, $id)
+    {
+        $menu = Menu::findOrFail($id);
+        $menu->delete();
+        return $menu;
     }
 
     public function partialSave(Request $request)

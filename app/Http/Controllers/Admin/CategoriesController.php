@@ -87,14 +87,20 @@ class CategoriesController extends Controller
     {
         $category = Category::findOrFail($id);
 
-        if ($request->image != null) {
-            if (file_exists('/images/categories/' . $category->image)) {
-                unlink('/images/categories/' . $category->image);
-            }
-            $name = time() . '-' . $request->image->getClientOriginalName();
-            $request->image->move('images/categories', $name);
+        // if ($request->file('image') != null) {
+        //     if (file_exists('/images/categories/' . $category->image)) {
+        //         unlink('/images/categories/' . $category->image);
+        //     }
+        //     $name = time() . '-' . $request->image->getClientOriginalName();
+        //     $request->image->move('images/categories', $name);
+        //
+        //     $category->image = $name;
+        // }
 
-            $category->image = $name;
+        if ($request->file('image')) {
+            $name = time() . '-' . $request->file('image')->getClientOriginalName();
+            $request->file('image')->move('images/categories', $name);
+            Category::where('id', $id)->update(['image' => $name]);
         }
 
         $category->translations()->delete();
