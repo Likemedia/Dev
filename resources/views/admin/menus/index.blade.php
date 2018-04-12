@@ -4,46 +4,27 @@
 
 @section('content')
 
-    @include('admin.list-elements', [
-        'actions' => [
-            trans('variables.elements_list') => route('menus.index'),
-            trans('variables.add_element') => route('menus.create'),
-        ]
-    ])
-    @include('admin.alerts')
+@include('admin.list-elements', [
+'actions' => [
+        trans('variables.elements_list') => route('menus.index'),
+        trans('variables.add_element') => route('menus.create'),
+    ]
+])
+@include('admin.alerts')
 
-
-    <div class="list-content">
-        <div class="part full-part min-height">
-            <h6>Menu</h6>
-            <hr>
-            <div id="container">
-                <a class="btn btn-primary modal-id" data-toggle="modal" data-target="#addCategory" data-id="0"><i class="fa fa-plus"></i></a>
-                <a href="{{ route('menus.clean') }}" class="btn btn-primary">Sterge toate puncte de meniu care nu mai exista</a>
-            </div>
-
-            <div class="dd" id="nestable-output">
-
-                {{-- {{ dd(Request::segment(4)) }} --}}
-
-                {!! SelectMenusTree(1, 0, $curr_id=null, 0, Request::segment(4)) !!}
-                <div class="nestable-stop"></div>
-            </div>
-            <style media="screen">
-                .dd{
-                    position: relative;
-                }
-                .nestable-stop{
-                    position: absolute;
-                    width: 100%;
-                    height: 127%;
-                    top: 0;
-                    left: 0;
-                    background-color:rgba(0, 0, 0, 0.5);
-                }
-            </style>
-            <script>
-
+<div class="list-content">
+    <div class="part full-part min-height">
+        <h6>Menu - <b>{{ $menuGroup->name }}</b></h6>
+        <hr>
+        <div id="container">
+            <a class="btn btn-primary modal-id" data-toggle="modal" data-target="#addCategory" data-id="0"><i class="fa fa-plus"></i></a>
+            <a href="{{ route('menus.clean') }}" class="btn btn-primary">Sterge toate puncte de meniu care nu mai exista</a>
+        </div>
+        <div class="dd" id="nestable-output">
+            {!! SelectMenusTree(1, 0, $curr_id=null, 0, Request::segment(4)) !!}
+            <div class="nestable-stop"></div>
+        </div>
+        <script>
             var data = localStorage.getItem("nestable");
             if (data !== null) {
                 jQuery(function($){
@@ -99,26 +80,24 @@
                     console.log(data.selected);
                 });
 
-            </script>
-        </div>
+        </script>
     </div>
+</div>
 
 @stop
-
 @section('footer')
-    <footer>
-        @include('admin.footer')
-    </footer>
 
-    @include('admin.menus.modals')
+<footer>
+    @include('admin.footer')
+</footer>
 
-    <script>
-        $('.modal-id').click(function () {
-            $('#parent_id').val($(this).data('id'));
-            $('.category-id').val($(this).data('id'));
-            $('.parent_id').val($(this).data('id'));
-            $('.category-name').text($(this).attr('data-name'));
-        })
-    </script>
-
+@include('admin.menus.modals')
+<script>
+    $('.modal-id').click(function () {
+        $('#parent_id').val($(this).data('id'));
+        $('.category-id').val($(this).data('id'));
+        $('.parent_id').val($(this).data('id'));
+        $('.category-name').text($(this).attr('data-name'));
+    })
+</script>
 @stop

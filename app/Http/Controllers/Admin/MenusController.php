@@ -9,6 +9,7 @@ use App\Models\Page;
 use App\Models\MenuTranslation;
 use App\Models\PageTranslation;
 use App\Models\CategoryTranslation;
+use App\Models\MenuGroup;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
@@ -40,6 +41,8 @@ class MenusController extends Controller
 
     public function index()
     {
+        // redirect to menu groups
+        return redirect()->route('groups.index');
         $menus = Menu::where('level', 1)->get();
         $categories = Category::where('parent_id', 0)->get();
         $pages = Page::with('translation')->where('active', 1)->get();
@@ -47,14 +50,14 @@ class MenusController extends Controller
         return view('admin.menus.index', compact('menus', 'categories', 'pages'));
     }
 
-    public function getMenuByGroup($id)
+    public function getMenuByGroup($groupId)
     {
-      $groupId = $id;
       $menus = Menu::where('level', 1)->get();
       $categories = Category::where('parent_id', 0)->get();
       $pages = Page::with('translation')->where('active', 1)->get();
+      $menuGroup = MenuGroup::findOrFail($groupId);
 
-      return view('admin.menus.index', compact('menus', 'categories', 'pages', 'groupId'));
+      return view('admin.menus.index', compact('menus', 'categories', 'pages', 'groupId', 'menuGroup'));
     }
 
     public function create()
@@ -320,65 +323,6 @@ class MenusController extends Controller
         }
 
         return  json_encode (['text' => SelectMenusTree(1, 0, $curr_id=null), 'message' => $response, 'parentId' =>  $parentId, 'childId' => $childId]);
-    }
-
-    public function movePosts(Request $request)
-    {
-        $menu = new menu();
-        $menu->parent_id = $request->parent_id;
-        $menu->save();
-
-        foreach ($this->langs as $lang):
-            $menu->translations()->create([
-                'lang_id' => $lang->id,
-                'name' => request('name_' . $lang->lang),
-                'slug' => request('slug_' . $lang->lang),
-            ]);
-        endforeach;
-
-        $posts = Post::where('menu_id', $request->parent_id)->get();
-
-        $addToId = $menu->id;
-
-        if ($request->add != 0) {
-            $addToId = $request->add;
-        }
-
-        if (!empty($posts)) {
-            foreach ($posts as $key => $post) {
-                Post::where('id', $post->id)->update([
-                    'menu_id' => $addToId,
-                ]);
-            }
-        }
-
-        session()->flash('message', 'New item has been created!');
-
-        return redirect()->back();
-
-    }
-
-    public function movePosts_(Request $request)
-    {
-        $posts = Post::where('menu_id', $request->parent_id)->get();
-
-        $addToId = $request->add;
-
-        if (!empty($posts)) {
-            foreach ($posts as $key => $post) {
-                Post::where('id', $post->id)->update([
-                    'menu_id' => $addToId,
-                ]);
-            }
-        }
-
-        Menu::where('id', $request->child_id)->update([
-            'parent_id' =>  $request->parent_id,
-        ]);
-
-        session()->flash('message', 'New item has been created!');
-
-        return redirect()->route('menus.index');
     }
 
     public function cleanMenus()

@@ -20,24 +20,6 @@
               enctype="multipart/form-data">
             {{ csrf_field() }}
 
-            <ul>
-                <li>
-                    <label for="alias">Alias</label>
-                    <input id="alias" type="text" name="alias" value="{{ $page->alias }}">
-                </li>
-                <li>
-                    <label for="">Active</label>
-                    <div style="display: flex; align-items: center; float: left;">
-                        <input type="radio" name="active" value="1" {{ $page->active == 1 ? 'checked' : '' }}>Yes
-                        <input type="radio" name="active" value="0" {{ $page->active == 0 ? 'checked' : '' }}>No
-                    </div>
-                </li>
-                <li>
-                    <label for="position">Position</label>
-                    <input id="position" type="text" name="alias" value="{{ $page->position }}">
-                </li>
-            </ul>
-
             <div class="tab-area">
                 @include('admin.alerts')
                 <ul class="nav nav-tabs nav-tabs-bordered">

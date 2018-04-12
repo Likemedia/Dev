@@ -20,23 +20,6 @@
               enctype="multipart/form-data">
             {{ csrf_field() }}
 
-            <ul>
-                <li>
-                    <label for="alias">Alias</label>
-                    <input id="alias" type="text" name="alias">
-                </li>
-                <li>
-                    <label for="">Active</label>
-                    <div>
-                        <input type="radio" name="active" value="1">Yes
-                        <input type="radio" name="active" value="0">No
-                    </div>
-                </li>
-                <li>
-                    <label for="position">Position</label>
-                    <input id="position" type="text" name="alias">
-                </li>
-            </ul>
 
             <div class="tab-area">
                 @include('admin.alerts')
