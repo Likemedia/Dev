@@ -13,7 +13,11 @@
                 @if (!empty($langs))
                     @foreach ($langs as $key => $lang)
                         <li class="nav-item">
+<<<<<<< HEAD
                             <a href="#{{ $lang->lang }}" class="nav-link  {{ $key == 0 ? ' open active' : '' }}"
+=======
+                            <a href="#{{ $lang->lang }}" class="nav-link  {{ $loop->first == 0 ? ' open active' : '' }}"
+>>>>>>> menus
                                data-target="#{{ $lang->lang }}">{{ $lang->lang }}</a>
                         </li>
                     @endforeach
@@ -140,6 +144,7 @@
                 @endforeach
             @endif
 
+
             <div>
                 <ul>
                     <li>
@@ -149,7 +154,8 @@
                 </ul>
 
                 @if ( $category->image != null)
-                    <img class="image thumbnail" src="/images/categories/{{ $category->image }}" alt="">
+                  cvsdf,lvmfdlmvf
+                    <img class="image thumbnail" src="{{ asset('images/categories/'.$category->image) }}" alt="">
                 @endif
             </div>
         </form>

@@ -124,6 +124,7 @@
                                             <option data="category" data-id="{{ $category->id }}" value="{{ !is_null($category->translation()->first()) ? $category->translation()->first()->name : '' }}">{{ $category->translation()->first()->name }}</option>
                                         @endforeach
                                     </optgroup>
+                                    <option data="link" value="link">Link extern</option>
                                     @endif
                                 </select>
                             </li>
@@ -132,6 +133,10 @@
                                 <input type="checkbox" name="subcategories" id="subcats{{ $lang->lang }}">
                                 <label for="subcats{{ $lang->lang }}">Bifati pentru a adauga si toate subcategoriile?</label>
                             </li>
+                            <li class="ex-link hide">
+                                <label>Link extern</label>
+                                <input type="text" name="link" class="name form-control">
+                            </li>
                             <li>
                                 <input style="margin-top: 10px;" type="submit" class="btn btn-primary" value="{{trans('variables.save_it')}}">
                             </li>
@@ -139,6 +144,7 @@
                     </div>
                     <input type="hidden" name="type" value="page" id="atributionType">
                     <input type="hidden" name="categoryId" value="" id="categoryId">
+                    <input type="hidden" name="groupId" value="{{ Request::segment(4) }}">
             </form>
             </div>
         </div>
@@ -163,6 +169,8 @@
                     {{ csrf_field() }}
                     {{ method_field("DELETE") }}
                     <input type="hidden" name="parent_id" class="parent_id" value="0"/>
+                    <input type="checkbox" name="with-children" id="with_children">
+                    <label for="with-children">Doriti sa stergeti elementul cu elementele child?</label>
                     <div class="list-content">
                         @include('admin.alerts')
                         <div class="part full-part">
@@ -187,6 +195,8 @@
             $('.subcategories').removeClass('hide');
             $('#atributionType').val('category');
             $('#categoryId').val(id);
+        }else if(value == 'link'){
+            $('.ex-link').removeClass('hide');
         }else{
             $('.subcategories').addClass('hide');
             $('.subcategories').children('input').prop("checked", false);

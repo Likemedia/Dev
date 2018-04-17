@@ -28,8 +28,8 @@ class PagesController extends Controller
     public function store(Request $request)
     {
         $page = new Page();
-        $page->alias = $request->alias;
-        $page->active = $request->active;
+        $page->alias = 'alias';
+        $page->active = 1;
         $page->position = $request->active;
         $page->save();
 
@@ -61,15 +61,15 @@ class PagesController extends Controller
     public function update(Request $request, $id)
     {
         $page = Page::findOrFail($id);
-        $page->alias = $request->alias;
-        $page->active = $request->active;
+        $page->alias = 'alias';
+        $page->active = 1;
         $page->position = $request->active;
         $page->save();
 
         $page->translations()->delete();
 
         foreach ($this->langs as $lang):
-            $page->translations()->create([
+            $page->translations()->update([
                 'lang_id' => $lang->id,
                 'slug' => request('slug_' . $lang->lang),
                 'title' => request('title_' . $lang->lang),
@@ -79,11 +79,6 @@ class PagesController extends Controller
                 'meta_keywords' => request('meta_keywords_' . $lang->lang),
                 'meta_description' => request('meta_description_' . $lang->lang)
             ]);
-
-//            if (request('image_' . $lang->lang) != null) {
-//                if ($page::where('lang_id', $lang->id))
-//            }
-
         endforeach;
     }
 
@@ -119,30 +114,19 @@ class PagesController extends Controller
     }
 
 
-    public function delete($id)
+    public function destroy($id)
     {
-        $itemId = $this->model::findOrFail($id);
-        if (!is_null($itemId)) {
-            $items = $this->modelTrans::where($this->foreignKey, $itemId->id)->get();
-            if (!empty($items)) {
-                foreach ($items as $key => $item) {
-                    if (File::exists('upfiles/' . $this->menu()['modules_name']->src . '/s/' . $item->img))
-                        File::delete('upfiles/' . $this->menu()['modules_name']->src . '/s/' . $item->img);
+        $page = Page::findOrFail($id);
 
-                    if (File::exists('upfiles/' . $this->menu()['modules_name']->src . '/m/' . $item->img))
-                        File::delete('upfiles/' . $this->menu()['modules_name']->src . '/m/' . $item->img);
-
-                    if (File::exists('upfiles/' . $this->menu()['modules_name']->src . '/' . $item->img))
-                        File::delete('upfiles/' . $this->menu()['modules_name']->src . '/' . $item->img);
-
-                    $this->modelTrans::where('id', $item->id)->delete();
-                }
-                $this->model::where('id', $id)->delete();
-                Session::flash('success', 'Элемент "' . $item->title . '" удален!');
-            }
+        if (file_exists('/images/pages' . $page->image)) {
+            unlink('/images/pages' . $page->image);
         }
 
-        return redirect()->back();
+        $page->delete();
+
+        session()->flash('message', 'Item has been deleted!');
+
+        return redirect()->route('pages.index');
     }
 
 }

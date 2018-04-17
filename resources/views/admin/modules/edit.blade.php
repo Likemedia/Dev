@@ -6,8 +6,13 @@
     @include('admin.speedbar')
     @include('admin.list-elements', [
         'actions' => [
+<<<<<<< HEAD
             trans('variables.elements_list') => route('modules.index'),
             trans('variables.add_element') => route('modules.create'),
+=======
+            trans('variables.elements_list') => url($lang, ''),
+            trans('variables.add_element') => url($lang, 'item/create'),
+>>>>>>> menus
         ]
     ])
 

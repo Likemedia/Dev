@@ -18,11 +18,11 @@
             <thead>
             <tr>
                 <th>{{trans('variables.title_table')}}</th>
-                <th>Создано</th>
                 <th>{{trans('variables.position_table')}}</th>
                 <th>{{trans('variables.active_table')}}</th>
                 <th>{{trans('variables.edit_table')}}</th>
                 <th>{{trans('variables.delete_table')}}</th>
+                <th>Creat</th>
             </tr>
             </thead>
             <tbody>
@@ -32,7 +32,6 @@
                     <td>
                         {{ $page->translation()->first()->title ?? trans('variables.another_name') }}
                     </td>
-                    <td>{{ $page->created_at->format('d/m/Y') }}</td>
                     <td class="dragHandle" nowrap style="cursor: move;">
                         <a class="top-pos" href=""></a>
                         <a class="bottom-pos" href=""></a>
@@ -46,23 +45,24 @@
                                 </a>
                             </button>
                         </form>
-
                     </td>
                     <td>
                         <a href="{{ route('pages.edit', $page->id) }}">
                             <i class="fa fa-edit"></i>
                         </a>
                     </td>
-                        <td class="destroy-element">
-                            <form action="{{ route('pages.destroy', $page->id) }}" method="post">
-                                <button type="submit" class="btn-link">
-                                    <a href="">
-                                        <i class="fa fa-trash"></i>
-                                    </a>
-                                </button>
-                            </form>
-
-                        </td>
+                    <td class="destroy-element">
+                        <form action="{{ route('pages.destroy', $page->id) }}" method="post">
+                            {{ csrf_field() }} {{ method_field('DELETE') }}
+                            <button type="submit" class="btn-link">
+                                <a href="">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                            </button>
+                        </form>
+                    </td>
+                    <td>{{ $page->created_at->format('d/m/Y') }}</td>
+                    
                 </tr>
             @endforeach
             </tbody>

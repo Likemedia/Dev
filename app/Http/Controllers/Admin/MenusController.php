@@ -9,6 +9,7 @@ use App\Models\Page;
 use App\Models\MenuTranslation;
 use App\Models\PageTranslation;
 use App\Models\CategoryTranslation;
+use App\Models\MenuGroup;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
@@ -40,11 +41,23 @@ class MenusController extends Controller
 
     public function index()
     {
+        // redirect to menu groups
+        return redirect()->route('groups.index');
         $menus = Menu::where('level', 1)->get();
         $categories = Category::where('parent_id', 0)->get();
         $pages = Page::with('translation')->where('active', 1)->get();
 
         return view('admin.menus.index', compact('menus', 'categories', 'pages'));
+    }
+
+    public function getMenuByGroup($groupId)
+    {
+      $menus = Menu::where('level', 1)->get();
+      $categories = Category::where('parent_id', 0)->get();
+      $pages = Page::with('translation')->where('active', 1)->get();
+      $menuGroup = MenuGroup::findOrFail($groupId);
+
+      return view('admin.menus.index', compact('menus', 'categories', 'pages', 'groupId', 'menuGroup'));
     }
 
     public function create()
@@ -62,6 +75,7 @@ class MenusController extends Controller
         $menu = new menu();
         $menu->parent_id = $request->parent_id;
         $menu->image = $name;
+        $menu->group_id = $request->groupId;
         $menu->save();
 
         foreach ($this->langs as $lang):
@@ -80,73 +94,75 @@ class MenusController extends Controller
 
         session()->flash('message', 'New item has been created!');
 
-        return redirect()->route('menus.index');
+        return redirect()->back();
     }
 
     public function edit($id)
     {
         $menuItem = Menu::with('translations')->findOrFail($id);
+        $categories = Category::where('parent_id', 0)->get();
+        $pages = Page::with('translation')->where('active', 1)->get();
 
-        return view('admin.menus.edit', compact('menuItem'));
+        return view('admin.menus.edit', compact('menuItem', 'categories', 'pages'));
     }
 
     public function update(Request $request, $id)
     {
         $menu = Menu::findOrFail($id);
 
-        if ($request->image != null) {
-            if (file_exists('/images/menus/' . $menu->image)) {
-                unlink('/images/menus/' . $menu->image);
-            }
-            $name = time() . '-' . $request->image->getClientOriginalName();
-            $request->image->move('images/menus', $name);
-
-            $menu->image = $name;
-        }
-
-        $menu->translations()->delete();
-
         foreach ($this->langs as $lang):
-            $menu->translations()->create([
-                'lang_id' => $lang->id,
+            $menu->translations()->where('menu_id', $id)->where('lang_id', $lang->id)->update([
+                'url' => request('link'),
                 'name' => request('name_' . $lang->lang),
-                'description' => request('description_' . $lang->lang),
-                'slug' => request('slug_' . $lang->lang),
-                'meta_title' => request('meta_title_' . $lang->lang),
-                'meta_keywords' => request('meta_keywords_' . $lang->lang),
-                'meta_description' => request('meta_description_' . $lang->lang),
-                'alt_attribute' => request('alt_text_' . $lang->lang),
-                'image_title' => request('title_' . $lang->lang)
             ]);
         endforeach;
 
         session()->flash('message', 'New item has been created!');
 
-        return redirect()->route('menus.index');
+        return redirect()->back();
 
-        dd($id);
     }
 
     public function destroy(Request $request, $id)
     {
-        if($id == 0){
-            $id = $request->parent_id;
-        }
+        if($id == 0){ $id = $request->parent_id; }
 
         $menu = Menu::findOrFail($id);
 
-        $menus = Menu::all();
+        if ($request->get('with_children') == 'on') {
+          // level 1
+          if (!is_null($menu)) {
+              $parent = $this->deleteOneMenuItem($menu, (int)$id);
+              // level 2
+              $submenus1 = Category::where('parent_id', $id)->get();
+              if (!empty($submenus1)) {
+                  foreach ($submenus1 as $submenu1) {
+                      $parent = $this->deleteOneMenuItem($submenu1, $parent);
+                      // level 3
+                      $submenus2 = Category::where('parent_id', $submenu1->id)->get();
+                      if (!empty($submenus2)) {
+                          foreach ($submenus2 as $key => $submenus2->id) {
+                              $parent = $this->deleteOneMenuItem($submenu2, $parent);
+                              // level 3
+                              $submenus3 = Category::where('parent_id', $submenu2->id)->get();
+                              if (!empty($submenus3)) {
+                                  foreach ($submenus3 as $key => $submenus3) {
+                                      $parent = $this->deleteOneMenuItem($submenu3, $parent);
+                                      // level 4
+                                      $submenus = Category::where('parent_id', $submenu->id)->get();
+                                      if (!empty($submenus)) {
+                                          foreach ($submenus as $key => $submenus) {
+                                              $parent = $this->deleteOneMenuItem($submenu, $parent);
+                                          }
+                                      }
+                                  }
+                              }
+                          }
+                      }
+                  }
+              }
+          }
 
-        foreach ($menus as $cat):
-            if ($menu->id == $cat->parent_id) {
-                session()->flash('message', 'Can\'t delete this item, because it has children.');
-
-                return redirect()->route('menus.index');
-            }
-        endforeach;
-
-        if (file_exists('/images/menus/' . $menu->image)) {
-            unlink('/images/menus/' . $menu->image);
         }
 
         $menu->delete();
@@ -154,17 +170,26 @@ class MenusController extends Controller
         return redirect()->back();
     }
 
+
+    public function deleteOneMenuItem($menu, $id)
+    {
+        $menu = Menu::findOrFail($id);
+        $menu->delete();
+        return $menu;
+    }
+
     public function partialSave(Request $request)
     {
         if ($request->get('type') == 'category') {
             if ($request->get('subcategories') == 'on') {
                 $parentId = $request->get('parent_id') ?? 0;
-                return $this->assignmentCategory($request->get('categoryId'), $parentId);
+                return $this->assignmentCategory($request->get('categoryId'), $parentId, $request->get('groupId'));
             }
         }
 
         $menu = new menu();
         $menu->parent_id = $request->parent_id;
+        $menu->group_id = $request->groupId;
         $menu->save();
 
         foreach ($this->langs as $lang):
@@ -177,35 +202,35 @@ class MenusController extends Controller
 
         session()->flash('message', 'New item has been created!');
 
-        return redirect()->route('menus.index');
+        return redirect()->back();
     }
 
-    public function assignmentCategory($id, $parentId)
+    public function assignmentCategory($id, $parentId, $groupId)
     {
         // level 1
         $category = Category::find($id);
         if (!is_null($category)) {
-            $parent = $this->addOneMenuItem($category, (int)$parentId);
+            $parent = $this->addOneMenuItem($category, (int)$parentId, $groupId);
             // level 2
             $subCategories1 = Category::where('parent_id', $id)->get();
             if (!empty($subCategories1)) {
                 foreach ($subCategories1 as $subcategory1) {
-                    $parent = $this->addOneMenuItem($subcategory1, $parent);
+                    $parent = $this->addOneMenuItem($subcategory1, $parent, $groupId);
                     // level 3
                     $subCategories2 = Category::where('parent_id', $subcategory1->id)->get();
                     if (!empty($subCategories2)) {
                         foreach ($subCategories2 as $key => $subCategory2->id) {
-                            $parent = $this->addOneMenuItem($subcategory2, $parent);
+                            $parent = $this->addOneMenuItem($subcategory2, $parent, $groupId);
                             // level 3
                             $subCategories3 = Category::where('parent_id', $subcategory2->id)->get();
                             if (!empty($subCategories3)) {
                                 foreach ($subCategories3 as $key => $subCategory3) {
-                                    $parent = $this->addOneMenuItem($subcategory3, $parent);
+                                    $parent = $this->addOneMenuItem($subcategory3, $parent, $groupId);
                                     // level 4
                                     $subCategories = Category::where('parent_id', $subcategory->id)->get();
                                     if (!empty($subCategories)) {
                                         foreach ($subCategories as $key => $subCategory) {
-                                            $parent = $this->addOneMenuItem($subcategory, $parent);
+                                            $parent = $this->addOneMenuItem($subcategory, $parent, $groupId);
                                         }
                                     }
                                 }
@@ -218,10 +243,11 @@ class MenusController extends Controller
 
         session()->flash('message', 'New item has been created!');
 
-        return redirect()->route('menus.index');
+        return redirect()->back();
+
     }
 
-    public function addOneMenuItem($category, $parent)
+    public function addOneMenuItem($category, $parent, $groupId)
     {
         $url = '';
         $parentId = $parent;
@@ -229,6 +255,8 @@ class MenusController extends Controller
 
         $menu = new menu();
         $menu->parent_id = $parentId;
+        $menu->group_id = $groupId;
+
         $menu->save();
 
         foreach ($this->langs as $lang):
@@ -295,64 +323,6 @@ class MenusController extends Controller
         }
 
         return  json_encode (['text' => SelectMenusTree(1, 0, $curr_id=null), 'message' => $response, 'parentId' =>  $parentId, 'childId' => $childId]);
-    }
-
-    public function movePosts(Request $request)
-    {
-        $menu = new menu();
-        $menu->parent_id = $request->parent_id;
-        $menu->save();
-
-        foreach ($this->langs as $lang):
-            $menu->translations()->create([
-                'lang_id' => $lang->id,
-                'name' => request('name_' . $lang->lang),
-                'slug' => request('slug_' . $lang->lang),
-            ]);
-        endforeach;
-
-        $posts = Post::where('menu_id', $request->parent_id)->get();
-
-        $addToId = $menu->id;
-
-        if ($request->add != 0) {
-            $addToId = $request->add;
-        }
-
-        if (!empty($posts)) {
-            foreach ($posts as $key => $post) {
-                Post::where('id', $post->id)->update([
-                    'menu_id' => $addToId,
-                ]);
-            }
-        }
-
-        session()->flash('message', 'New item has been created!');
-
-        return redirect()->route('menus.index');
-    }
-
-    public function movePosts_(Request $request)
-    {
-        $posts = Post::where('menu_id', $request->parent_id)->get();
-
-        $addToId = $request->add;
-
-        if (!empty($posts)) {
-            foreach ($posts as $key => $post) {
-                Post::where('id', $post->id)->update([
-                    'menu_id' => $addToId,
-                ]);
-            }
-        }
-
-        Menu::where('id', $request->child_id)->update([
-            'parent_id' =>  $request->parent_id,
-        ]);
-
-        session()->flash('message', 'New item has been created!');
-
-        return redirect()->route('menus.index');
     }
 
     public function cleanMenus()

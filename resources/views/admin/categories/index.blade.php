@@ -27,9 +27,7 @@
             </div>
 
             <div class="dd" id="nestable-output">
-
-                {!! SelectGoodsCatsTree(1, 0, $curr_id=null) !!}
-
+                {!! SelectGoodsCatsTree($lang->id, 0, $curr_id=null) !!}
             </div>
 
             <script>

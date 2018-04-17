@@ -42,6 +42,10 @@ Route::group(['prefix' => 'back', 'middleware' => 'auth'], function () {
     Route::post('/menus/part', 'Admin\MenusController@partialSave')->name('menus.partial.save');
     Route::post('/menus/categories/assignment', 'Admin\MenusController@assignmentCategory')->name('menus.assignment.category');
     Route::get('/menus/items/clean', 'Admin\MenusController@cleanMenus')->name('menus.clean');
+    Route::get('/menus/group/{id}', 'Admin\MenusController@getMenuByGroup')->name('menus.group');
+
+    // Menu groups
+    Route::resource('/groups', 'Admin\MenuGroupsController');
 
     Route::resource('/tags', 'Admin\TagsController');
 
@@ -78,5 +82,4 @@ if ($prefix == $lang->lang) {
     Route::group(['prefix' => $prefix], function() {
         require_once(__DIR__.'/routesFront.php');
     });
-
 }
