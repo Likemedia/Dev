@@ -18,11 +18,16 @@ class CreateCategoriesTable extends Migration
 
             $table->increments('id');
             $table->integer('parent_id');
+            $table->unsignedInteger('autometa_id');
             $table->string('alias')->nullable();
             $table->string('image');
             $table->boolean('deleted')->default(0);
             $table->tinyInteger('level')->nullable();
             $table->tinyInteger('position')->nullable();
+
+            $table->foreign('autometa_id')->references('id')->on('autometas');
+
+
             $table->timestamps();
         });
     }

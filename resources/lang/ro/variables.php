@@ -22,6 +22,7 @@ return [
     'home' => 'Acasa',
     'title_table' => 'Titlu',
     'edit_table' => 'Editare',
+    'view_table' => 'Vezi',
     'active_table' => 'Activ',
     'position_table' => 'Pozitie',
     'delete_table' => 'Sterge',

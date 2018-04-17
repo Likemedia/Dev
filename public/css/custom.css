@@ -1299,6 +1299,7 @@ a.black:hover{
     border-top: none;
     overflow: hidden;
 }
+
 .has-error label{
     color: #c0392b;
 }

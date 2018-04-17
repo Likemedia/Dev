@@ -1,3 +1,4 @@
+
 @extends('admin.app')
 @include('admin.nav-bar')
 @include('admin.left-menu')
@@ -9,42 +10,46 @@
 
     @include('admin.list-elements', [
         'actions' => [
-            trans('variables.elements_list') => route('autometa.index'),
-            trans('variables.add_element') => route('autometa.create'),
+            trans('variables.elements_list') => route('parameters.index'),
+            trans('variables.add_element') => route('parameters.create'),
         ]
     ])
 
 
-    @if(count($metas))
+    @if(count($parameters))
 
         <table class="el-table" id="tablelistsorter">
             <thead>
             <tr>
                 <th>{{trans('variables.title_table')}}</th>
-                <th>Descrierea</th>
+                <th>{{trans('variables.view_table')}}</th>
                 <th>{{trans('variables.edit_table')}}</th>
                 <th>{{trans('variables.delete_table')}}</th>
             </tr>
             </thead>
             <tbody>
-            @foreach($metas as $meta)
-                <tr id="{{ $meta->id }}">
+            @foreach($parameters as $parameter)
+                <tr id="{{ $parameter->id }}">
 
-                   
+
                     <td>
-                       {{ $meta->name }}
-                    </td>
-                    <td>
-                        {{ $meta->description }}
+                        {{ $parameter->translation->first()->title }}
                     </td>
 
                     <td>
-                        <a href="{{ route('autometa.edit', $meta->id) }}">
+                        <a href="{{ route('parameters.show', $parameter->id) }}">
+                            <i class="fa fa-eye"></i>
+                        </a>
+                    </td>
+
+                    <td>
+                        <a href="{{ route('parameters.edit', $parameter->id) }}">
                             <i class="fa fa-edit"></i>
                         </a>
                     </td>
+
                     <td class="destroy-element">
-                        <form action="{{ route('autometa.destroy', $meta->id) }}" method="post">
+                        <form action="{{ route('parameters.destroy', $parameter->id) }}" method="post">
                             {{ csrf_field() }} {{ method_field('DELETE') }}
                             <button type="submit" class="btn-link">
                                 <a>
@@ -55,7 +60,7 @@
                     </td>
                 </tr>
             @endforeach
-           
+
             </tbody>
             <tfoot>
             <tr>
@@ -64,13 +69,6 @@
             </tfoot>
         </table>
 
-        @foreach($metas as $meta)
-              
-           {{ $meta->generateDescription() }} <br>
-           {{ $meta->generateTitle() }}
-
-           <br><br><br><br>
-        @endforeach
     @else
         <div class="empty-response">{{trans('variables.list_is_empty')}}</div>
     @endif

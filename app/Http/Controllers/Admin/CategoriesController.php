@@ -35,7 +35,7 @@ class CategoriesController extends Controller
 
     public function index()
     {
-        $categories = Category::where('level', 1)->get();
+        $categories = Category::with('translation')->where('level', 1)->get();
 
         return view('admin.categories.index', compact('categories'));
     }
