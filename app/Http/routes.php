@@ -44,6 +44,16 @@ Route::group(['prefix' => 'back', 'middleware' => 'auth'], function () {
     Route::get('/menus/items/clean', 'Admin\MenusController@cleanMenus')->name('menus.clean');
     Route::get('/menus/group/{id}', 'Admin\MenusController@getMenuByGroup')->name('menus.group');
 
+    Route::resource('/product-categories', 'Admin\ProductCategoryController');
+    Route::post('/product-categories/move/posts', 'Admin\ProductCategoryController@movePosts')->name('product-categories.move.posts');
+    Route::post('/product-categories/change', 'Admin\ProductCategoryController@change')->name('product-categories.change');
+    Route::post('/product-categories/part', 'Admin\ProductCategoryController@partialSave')->name('product-categories.partial.save');
+    Route::post('/product-categories/move/posts_', 'Admin\ProductCategoryController@movePosts_')->name('product-categories.move.posts_');
+    Route::post('/product-categories/part', 'Admin\ProductCategoryController@partialSave')->name('product-categories.partial.save');
+    Route::post('/product-categories/categories/assignment', 'Admin\ProductCategoryController@assignmentCategory')->name('product-categories.assignment.category');
+    Route::get('/product-categories/items/clean', 'Admin\ProductCategoryController@cleanProductCategory')->name('product-categories.clean');
+    Route::get('/product-categories/group/{id}', 'Admin\ProductCategoryController@getMenuByGroup')->name('product-categories.group');
+
     // Menu groups
     Route::resource('/groups', 'Admin\MenuGroupsController');
 
