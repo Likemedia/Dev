@@ -20,6 +20,8 @@ class CreateProductTranslationsTable extends Migration
             $table->unsignedInteger('product_id');
             $table->unsignedInteger('lang_id');
             $table->string('alias');
+            $table->string('name');
+            $table->text('body');
             $table->string('seo_h1');
             $table->string('seo_title');
             $table->string('seo_keywords');
@@ -27,7 +29,6 @@ class CreateProductTranslationsTable extends Migration
 
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->foreign('lang_id')->references('id')->on('lang')->onDelete('cascade');
-
 
             $table->timestamps();
         });

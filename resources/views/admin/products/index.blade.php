@@ -9,8 +9,8 @@
 
     @include('admin.list-elements', [
         'actions' => [
-            trans('variables.elements_list') => route('autometa.index'),
-            trans('variables.add_element') => route('autometa.create'),
+            trans('variables.elements_list') => route('products.index'),
+            trans('variables.add_element') => route('products.create'),
         ]
     ])
 
@@ -21,23 +21,17 @@
             <thead>
             <tr>
                 <th>{{trans('variables.title_table')}}</th>
-                <th>Descrierea</th>
                 <th>{{trans('variables.edit_table')}}</th>
                 <th>{{trans('variables.delete_table')}}</th>
             </tr>
             </thead>
             <tbody>
+
             @foreach($products as $product)
                 <tr id="{{ $product->id }}">
-
-
                     <td>
-                        {{ $product->name }}
+                        {{ $product->translation->first()->name }}
                     </td>
-                    <td>
-                        {{ $product->description }}
-                    </td>
-
                     <td>
                         <a href="{{ route('products.edit', $product->id) }}">
                             <i class="fa fa-edit"></i>

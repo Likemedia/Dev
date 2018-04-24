@@ -27,7 +27,7 @@
             </ul>
         </div>
 
-        <form class="form-reg" method="POST" action="{{ route('categories.store') }}" enctype="multipart/form-data">
+        <form class="form-reg" method="POST" action="{{ route('products.store') }}" enctype="multipart/form-data">
             {{ csrf_field() }}
 
             @if (!empty($langs))
@@ -55,15 +55,6 @@
                                     </script>
                                 </li>
 
-                                <li>
-                                    <label>Image Alt text</label>
-                                    <input type="text" name="alt_text_{{ $lang->lang }}">
-                                </li>
-
-                                <li>
-                                    <label>Image Title</label>
-                                    <input type="text" name="title_{{ $lang->lang }}">
-                                </li>
                             </ul>
                         </div>
 
@@ -101,16 +92,13 @@
             <div>
                 <ul>
                     <li>
-                        <select name="parent_id">
+                        <label>Categorie</label>
+                        <select name="category_id">
                             <option value="0">- - -</option>
                             @foreach($categories as $category)
                                 <option value="{{ $category->id }}">{{ $category->translation()->first()->name }}</option>
                             @endforeach
                         </select>
-                    </li>
-                    <li>
-                        <label>{{trans('variables.img')}}</label>
-                        <input style="padding: 0; border: none" type="file" name="image"/>
                     </li>
                 </ul>
 
